@@ -16,8 +16,8 @@ and local learning progress in one interface.
 ## Package
 
 - Application ID: `com.moranbika.cet6`
-- Version: `1.0.0` (`versionCode 1`)
-- Artifact: `Moran-android.apk`
+- Version: `1.0` (`versionCode 1`)
+- Artifact: `Moran-android-debug.apk`
 
 ## Build
 
