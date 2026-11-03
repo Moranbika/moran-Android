@@ -1,0 +1,211 @@
+/* Touch shell: keep phone and tablet navigation grounded, readable and out of the home indicator. */
+
+.mobile-liquid-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 50;
+  width: 100vw;
+  max-width: none;
+  overflow: hidden;
+  transform: translateX(-50%);
+  border: 1px solid color-mix(in srgb, white 66%, transparent);
+  border-bottom: 0;
+  border-radius: 22px 22px 0 0;
+  background: color-mix(in srgb, var(--background) 78%, transparent);
+  box-shadow: 0 -12px 34px color-mix(in srgb, var(--primary) 12%, transparent);
+  padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+  -webkit-backdrop-filter: blur(20px) saturate(165%);
+  backdrop-filter: blur(20px) saturate(165%);
+}
+
+.mobile-liquid-nav .mobile-nav {
+  background: transparent;
+}
+
+.mobile-more-sheet {
+  right: 0;
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  width: auto;
+  max-height: none;
+  overflow: hidden;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 28px 28px 0 0;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  box-shadow: 0 -20px 56px color-mix(in srgb, var(--primary) 16%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  scrollbar-width: none;
+}
+
+.mobile-more-sheet-content {
+  max-height: min(640px, calc(100dvh - 148px - env(safe-area-inset-bottom, 0px)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.mobile-more-sheet::-webkit-scrollbar,
+.mobile-more-sheet-content::-webkit-scrollbar {
+  display: none;
+}
+
+.stage-filter-row {
+  scrollbar-width: none;
+}
+
+.stage-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+:root[data-touch="true"] .desktop-titlebar {
+  display: none !important;
+}
+
+:root[data-touch="true"] .app-sidebar-shell {
+  display: none !important;
+}
+
+:root[data-touch="true"] .mobile-liquid-shell {
+  display: block !important;
+}
+
+:root[data-touch="true"] .app-frame {
+  gap: 0 !important;
+  padding: 0 !important;
+}
+
+:root[data-touch="true"] .app-workspace-shell {
+  border-radius: 0 !important;
+}
+
+:root[data-touch="true"] .app-main-scroll {
+  padding-top: calc(0.75rem + env(safe-area-inset-top, 0px)) !important;
+  padding-right: max(1rem, env(safe-area-inset-right, 0px)) !important;
+  padding-bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px)) !important;
+}
+
+:root[data-touch="true"] .vocab-rating-dock {
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+}
+
+:root[data-touch="true"] .stage-filter-row {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+}
+
+:root[data-touch="true"] .stage-filter-row > button {
+  flex: 0 0 auto;
+  min-height: 44px;
+  scroll-snap-align: start;
+}
+
+:root[data-touch="true"] body {
+  overscroll-behavior-y: none;
+}
+
+:root[data-touch="true"] button,
+:root[data-touch="true"] select,
+:root[data-touch="true"] input:not([type="hidden"]):not([type="range"]):not([type="checkbox"]):not([type="radio"]) {
+  min-height: 44px;
+}
+
+:root[data-touch="true"] input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),
+:root[data-touch="true"] textarea,
+:root[data-touch="true"] select {
+  font-size: 16px;
+}
+
+@media (max-width: 767px) {
+  .stage-filter-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+  }
+
+  .stage-filter-row > button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    scroll-snap-align: start;
+  }
+}
+
+@media (min-width: 768px) {
+  :root[data-touch="true"] .mobile-liquid-nav {
+    bottom: max(14px, env(safe-area-inset-bottom, 0px));
+    width: min(640px, calc(100vw - 40px));
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+    border-radius: 28px;
+  }
+
+  :root[data-touch="true"] .mobile-liquid-nav .mobile-nav {
+    height: 64px;
+  }
+
+  :root[data-touch="true"] .app-main-scroll {
+    padding-right: max(1.5rem, env(safe-area-inset-right, 0px)) !important;
+    padding-left: max(1.5rem, env(safe-area-inset-left, 0px)) !important;
+  }
+
+  :root[data-touch="true"] .mobile-more-sheet {
+    right: auto;
+    left: 50%;
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    width: min(480px, calc(100vw - 48px));
+    transform: translateX(-50%);
+    transform-origin: 50% 100%;
+    border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+    border-bottom: 0;
+    border-radius: 28px 28px 0 0;
+  }
+
+  :root[data-touch="true"] .mobile-more-sheet[data-state="open"] {
+    animation-name: more-sheet-tablet-open;
+  }
+
+  :root[data-touch="true"] .mobile-more-sheet[data-state="closing"] {
+    animation-name: more-sheet-tablet-close;
+  }
+
+  :root[data-touch="true"] .vocab-rating-dock {
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@keyframes more-sheet-tablet-open {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes more-sheet-tablet-close {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(26px);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .mobile-liquid-nav,
+  .mobile-more-sheet {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: var(--card) !important;
+  }
+}

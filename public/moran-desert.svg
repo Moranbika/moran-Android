@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f9dcae"/><stop offset=".55" stop-color="#efb071"/><stop offset="1" stop-color="#d97b4d"/></linearGradient>
+<radialGradient id="sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff5cf"/><stop offset=".6" stop-color="#ffd08a"/><stop offset="1" stop-color="#f3a45c" stop-opacity=".1"/></radialGradient>
+<linearGradient id="dune" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a05b"/><stop offset="1" stop-color="#b06a43"/></linearGradient>
+</defs>
+<rect width="1920" height="1080" fill="url(#sky)"/>
+<circle cx="1450" cy="300" r="150" fill="url(#sun)"/>
+<path d="M0 650 C260 580 540 610 780 660 C1040 715 1280 600 1540 630 C1720 650 1840 630 1920 610 V1080 H0Z" fill="#e0a967" opacity=".9"/>
+<path d="M0 780 C300 700 560 740 820 790 C1100 845 1360 730 1640 760 C1780 775 1860 760 1920 745 V1080 H0Z" fill="#c57c4b"/>
+<path d="M0 900 C320 850 600 890 900 870 C1200 850 1480 900 1740 875 C1830 867 1890 872 1920 880 V1080 H0Z" fill="#9c5a3e"/>
+<g stroke="#f8d9a8" stroke-width="3" fill="none" opacity=".35"><path d="M220 820 C520 790 780 815 1080 795"/><path d="M500 930 C780 905 1020 925 1280 910"/><path d="M1100 860 C1320 842 1520 858 1740 840"/></g>
+</svg>

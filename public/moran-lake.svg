@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" fill="none">
+  <defs>
+    <linearGradient id="lakeSky" x1="960" y1="0" x2="960" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6FEFF"/>
+      <stop offset="0.57" stop-color="#DBF2F3"/>
+      <stop offset="1" stop-color="#BDE4E4"/>
+    </linearGradient>
+    <linearGradient id="lakeWater" x1="960" y1="560" x2="960" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#86CFD2" stop-opacity="0.88"/>
+      <stop offset="0.45" stop-color="#A9E1DF" stop-opacity="0.82"/>
+      <stop offset="1" stop-color="#E8F7F4" stop-opacity="0.9"/>
+    </linearGradient>
+    <radialGradient id="lakeSun" cx="0" cy="0" r="1" gradientTransform="translate(1372 158) rotate(90) scale(310)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF7D8" stop-opacity="0.96"/>
+      <stop offset="0.48" stop-color="#F9EFD0" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#F9EFD0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lakeMist" x="-10%" y="-30%" width="120%" height="160%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+    <filter id="lakeGrain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="9"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 0.075"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#lakeSky)"/>
+  <rect width="1920" height="1080" fill="url(#lakeSun)"/>
+  <circle cx="1372" cy="158" r="62" fill="#FFF8DF" fill-opacity="0.78"/>
+  <path d="M-80 536C148 463 337 458 534 507C728 556 876 531 1034 476C1239 405 1417 398 1600 448C1734 485 1834 489 2010 452V642H-80V536Z" fill="#9BCED0" fill-opacity="0.62"/>
+  <path d="M-90 589C162 523 362 516 583 556C809 596 966 570 1152 512C1363 446 1590 455 2010 544V662H-90V589Z" fill="#6BB5B5" fill-opacity="0.58"/>
+  <path d="M-100 622C111 592 319 596 523 633C751 675 936 675 1169 630C1422 581 1664 589 2020 640V1080H-100V622Z" fill="url(#lakeWater)"/>
+  <g filter="url(#lakeMist)" fill="#FFFFFF" fill-opacity="0.52">
+    <ellipse cx="490" cy="591" rx="580" ry="44"/>
+    <ellipse cx="1290" cy="622" rx="680" ry="48"/>
+  </g>
+  <g stroke="#F5FFFF" stroke-linecap="round" stroke-opacity="0.54">
+    <path d="M330 724C538 706 701 708 878 729" stroke-width="4"/>
+    <path d="M946 785C1177 764 1353 768 1540 792" stroke-width="5"/>
+    <path d="M590 873C790 852 968 853 1143 879" stroke-width="4"/>
+    <path d="M1124 948C1311 932 1482 936 1658 959" stroke-width="3"/>
+  </g>
+  <g fill="#286C67" fill-opacity="0.6">
+    <path d="M141 1080L164 749L184 753L173 1080H141Z"/>
+    <path d="M195 1080L216 806L232 810L230 1080H195Z"/>
+    <path d="M260 1080L273 834L288 837L294 1080H260Z"/>
+    <path d="M1776 1080L1763 816L1780 810L1808 1080H1776Z"/>
+    <path d="M1832 1080L1813 848L1828 842L1861 1080H1832Z"/>
+  </g>
+  <g stroke="#EAF8EA" stroke-width="3" stroke-opacity="0.48" stroke-linecap="round">
+    <path d="M720 1018C829 1007 922 1010 1005 1022"/>
+    <path d="M1266 1031C1371 1019 1457 1022 1537 1035"/>
+  </g>
+  <rect width="1920" height="1080" filter="url(#lakeGrain)" opacity="0.22"/>
+</svg>

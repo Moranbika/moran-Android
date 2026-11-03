@@ -1,0 +1,127 @@
+.moran-launch {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: #000;
+  color: #f5f5f7;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 720ms cubic-bezier(0.23, 1, 0.32, 1);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.moran-launch-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  padding: 24px;
+  text-align: center;
+  animation: moran-launch-brand-in 900ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.moran-launch-wordmark {
+  margin: 0;
+  color: #f5f5f7;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 7.5vw, 4rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+}
+
+.moran-launch-signature {
+  margin: 0;
+  color: rgba(245, 245, 247, 0.42);
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+}
+
+.moran-launch-tagline {
+  margin: 0;
+  color: rgba(245, 245, 247, 0.52);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  text-indent: 0.08em;
+}
+
+.moran-launch.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 720ms cubic-bezier(0.23, 1, 0.32, 1),
+    visibility 0s linear 720ms;
+}
+
+.moran-launch.is-leaving .moran-launch-brand {
+  animation: moran-launch-brand-out 560ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes moran-launch-brand-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes moran-launch-brand-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.03);
+    filter: blur(6px);
+  }
+}
+
+@media (max-width: 640px) {
+  .moran-launch-brand {
+    gap: 10px;
+  }
+
+  .moran-launch-wordmark {
+    font-size: 2.4rem;
+  }
+
+  .moran-launch-signature {
+    font-size: 8px;
+  }
+
+  .moran-launch-tagline {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moran-launch-brand,
+  .moran-launch.is-leaving .moran-launch-brand {
+    animation: none;
+  }
+
+  .moran-launch,
+  .moran-launch.is-leaving {
+    transition: opacity 160ms linear;
+  }
+}

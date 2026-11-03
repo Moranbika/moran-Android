@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24142e"/><stop offset=".42" stop-color="#6f3047"/><stop offset=".72" stop-color="#c95c4d"/><stop offset="1" stop-color="#f3bd78"/></linearGradient>
+<radialGradient id="sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff4c7"/><stop offset=".55" stop-color="#ffc56d"/><stop offset="1" stop-color="#ff9a5c" stop-opacity="0"/></radialGradient>
+<linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a24b54"/><stop offset="1" stop-color="#251728"/></linearGradient>
+</defs>
+<rect width="1920" height="1080" fill="url(#sky)"/>
+<circle cx="960" cy="520" r="210" fill="url(#sun)"/>
+<path d="M0 630 C300 560 520 600 760 650 C1020 705 1280 560 1560 610 C1720 640 1830 620 1920 590 V1080 H0Z" fill="#5a2a3a" opacity=".92"/>
+<path d="M0 740 C260 690 540 730 820 760 C1100 790 1320 700 1600 730 C1760 748 1860 730 1920 710 V1080 H0Z" fill="#3a2030"/>
+<rect y="805" width="1920" height="275" fill="url(#water)"/>
+<path d="M0 820 C280 800 560 840 880 825 C1200 810 1500 850 1920 820 V1080 H0Z" fill="#1d1524" opacity=".82"/>
+<ellipse cx="960" cy="880" rx="330" ry="18" fill="#ffcf88" opacity=".28"/>
+<ellipse cx="960" cy="930" rx="220" ry="10" fill="#ffcf88" opacity=".16"/>
+</svg>

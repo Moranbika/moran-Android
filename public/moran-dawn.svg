@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="960" y1="0" x2="960" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7FBF8"/>
+      <stop offset="0.52" stop-color="#E3F2ED"/>
+      <stop offset="1" stop-color="#C9E3DA"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="0" cy="0" r="1" gradientTransform="translate(1450 176) rotate(90) scale(330)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF5DD" stop-opacity="0.96"/>
+      <stop offset="0.48" stop-color="#F7E8C9" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#F7E8C9" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lake" x1="960" y1="634" x2="960" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A3CFC3" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#EAF6F1" stop-opacity="0.5"/>
+    </linearGradient>
+    <filter id="mist" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="24"/>
+    </filter>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.78" numOctaves="2" seed="17" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.11"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <rect width="1920" height="1080" fill="url(#sunGlow)"/>
+  <circle cx="1450" cy="176" r="66" fill="#FBF0D7" fill-opacity="0.72"/>
+
+  <path d="M-60 565C185 428 348 447 552 542C753 636 866 574 1068 445C1267 318 1478 355 1980 532V774H-60V565Z" fill="#C4E0D7" fill-opacity="0.76"/>
+  <path d="M-80 622C137 506 322 505 504 594C727 702 912 625 1090 515C1300 386 1558 423 2000 601V814H-80V622Z" fill="#8ABDAF" fill-opacity="0.7"/>
+  <path d="M-50 709C152 599 320 611 496 687C717 782 886 722 1084 607C1271 499 1531 532 1970 690V860H-50V709Z" fill="#5F988A" fill-opacity="0.6"/>
+  <path d="M-72 782C134 703 347 716 528 785C706 852 893 809 1090 706C1289 602 1541 627 1978 782V916H-72V782Z" fill="url(#lake)"/>
+
+  <g filter="url(#mist)" fill="#FFFFFF" fill-opacity="0.52">
+    <ellipse cx="479" cy="582" rx="430" ry="50"/>
+    <ellipse cx="1296" cy="641" rx="535" ry="56"/>
+    <ellipse cx="851" cy="737" rx="690" ry="42"/>
+  </g>
+
+  <g stroke="#FFFFFF" stroke-opacity="0.38" stroke-linecap="round">
+    <path d="M304 872C452 861 592 862 721 875"/>
+    <path d="M835 915C1022 898 1187 902 1355 923"/>
+    <path d="M1092 822C1227 811 1351 812 1480 827"/>
+    <path d="M433 984C624 969 759 973 918 988"/>
+  </g>
+
+  <g fill="#2F665E" fill-opacity="0.52">
+    <path d="M0 714L54 552L102 714H74L128 637L176 714H144L199 594L250 714H217L266 646L313 714H282L330 622L380 714H347L398 657L444 714H416L461 636L508 714H477L525 665L571 714H538L592 605L649 714H617L666 650L713 714H683L731 630L780 714H746L797 656L843 714H812L857 624L906 714H874L923 650L969 714H939L987 625L1036 714H1004L1052 659L1098 714H1067L1119 613L1175 714H1142L1192 647L1240 714H1208L1257 628L1306 714H1274L1324 650L1371 714H1340L1391 610L1448 714H1415L1464 652L1512 714H1480L1530 626L1579 714H1548L1597 665L1644 714H1613L1665 607L1722 714H1689L1738 644L1786 714H1754L1804 623L1854 714H1821L1872 647L1920 714V1080H0V714Z" fill-opacity="0.18"/>
+  </g>
+
+  <g fill="#1F514A" fill-opacity="0.68">
+    <path d="M1640 1080V690L1670 630L1682 696L1718 618L1711 719L1762 692L1725 786L1764 812L1697 841L1665 1080H1640Z"/>
+    <path d="M137 1080V800L161 757L174 813L200 748L197 829L231 804L205 874L235 892L189 916L166 1080H137Z"/>
+  </g>
+  <rect width="1920" height="1080" filter="url(#grain)" opacity="0.28"/>
+</svg>

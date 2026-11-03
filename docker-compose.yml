@@ -1,0 +1,16 @@
+services:
+  moran-admin:
+    build:
+      context: ./server
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MORAN_DB_PATH: /data/moran.db
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - moran-content-data:/data
+
+volumes:
+  moran-content-data:

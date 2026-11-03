@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" fill="none">
+  <defs>
+    <linearGradient id="coastSky" x1="960" y1="0" x2="960" y2="650" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F9FEFF"/>
+      <stop offset="0.56" stop-color="#E2F7F8"/>
+      <stop offset="1" stop-color="#C6EBED"/>
+    </linearGradient>
+    <linearGradient id="coastSea" x1="960" y1="560" x2="960" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#71C8CC"/>
+      <stop offset="0.58" stop-color="#9BDDDA"/>
+      <stop offset="1" stop-color="#C7EFE8"/>
+    </linearGradient>
+    <radialGradient id="coastSun" cx="0" cy="0" r="1" gradientTransform="translate(1458 168) rotate(90) scale(340)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF2C5" stop-opacity="0.96"/>
+      <stop offset="0.54" stop-color="#F9EDC7" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#F9EDC7" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="coastMist" x="-10%" y="-30%" width="120%" height="160%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+    <filter id="coastGrain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.86" numOctaves="2" seed="63"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 0.08"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#coastSky)"/>
+  <rect width="1920" height="1080" fill="url(#coastSun)"/>
+  <circle cx="1458" cy="168" r="68" fill="#FFF4D3" fill-opacity="0.78"/>
+  <path d="M-80 552C182 510 376 514 594 552C826 592 1032 590 1249 548C1492 501 1707 508 2010 566V771H-80V552Z" fill="#8FD1D1" fill-opacity="0.52"/>
+  <path d="M-80 617C162 574 372 585 580 625C815 670 1014 666 1232 624C1453 582 1691 587 2010 649V1080H-80V617Z" fill="url(#coastSea)"/>
+  <g filter="url(#coastMist)" fill="#FFFFFF" fill-opacity="0.55">
+    <ellipse cx="472" cy="584" rx="610" ry="36"/>
+    <ellipse cx="1396" cy="617" rx="650" ry="42"/>
+  </g>
+  <path d="M-120 1080V955C226 898 441 900 667 961C894 1023 1093 1028 1320 968C1534 911 1744 909 2040 979V1080H-120Z" fill="#F2E5C5" fill-opacity="0.92"/>
+  <g stroke="#FFFFFF" stroke-linecap="round" stroke-opacity="0.64">
+    <path d="M257 706C475 682 656 686 834 713" stroke-width="5"/>
+    <path d="M913 764C1131 738 1316 742 1511 771" stroke-width="4"/>
+    <path d="M530 844C724 821 906 824 1085 850" stroke-width="3"/>
+  </g>
+  <g fill="#FFFFFF" fill-opacity="0.58">
+    <path d="M1370 310C1424 289 1479 287 1539 301C1492 319 1434 323 1370 310Z"/>
+    <path d="M1162 386C1206 369 1253 367 1297 377C1257 394 1210 398 1162 386Z"/>
+  </g>
+  <g fill="#3E7B70" fill-opacity="0.5">
+    <path d="M1676 1080L1692 889L1712 910L1738 870L1746 1080H1676Z"/>
+    <path d="M1818 1080L1826 928L1845 946L1866 914L1871 1080H1818Z"/>
+  </g>
+  <rect width="1920" height="1080" filter="url(#coastGrain)" opacity="0.22"/>
+</svg>
