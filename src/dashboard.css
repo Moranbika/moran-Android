@@ -1,0 +1,510 @@
+/* Moran clarity system: a bright atmospheric field, porcelain data sheets and restrained ink. */
+
+:root {
+  --panel-bg: color-mix(in srgb, var(--card) var(--glass-alpha-percent), transparent);
+  --panel-bg-soft: color-mix(in srgb, var(--card) var(--glass-alpha-soft-percent), transparent);
+  --panel-line: color-mix(in srgb, white 68%, var(--border));
+  --panel-shadow: 0 1px 2px rgba(21, 65, 74, 0.035), 0 10px 28px rgba(21, 65, 74, 0.055);
+  --panel-shadow-quiet: 0 1px 2px rgba(21, 65, 74, 0.028), 0 6px 18px rgba(21, 65, 74, 0.035);
+  --data-accent: #c8853e;
+  --data-blue: #358ea2;
+  --surface-radius: 18px;
+}
+
+.moran-backdrop-wash {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 36%),
+    linear-gradient(92deg, rgba(12, 70, 80, 0.025), transparent 48%, rgba(14, 76, 89, 0.05));
+}
+
+.app-glass {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--panel-line);
+  box-shadow: var(--panel-shadow);
+  -webkit-backdrop-filter: blur(24px) saturate(1.08);
+  backdrop-filter: blur(24px) saturate(1.08);
+}
+
+.app-glass::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.06) 36%, transparent 76%);
+  mix-blend-mode: normal;
+  opacity: 0.62;
+}
+
+.app-glass-soft {
+  background-color: var(--panel-bg-soft);
+  border-color: color-mix(in srgb, white 58%, var(--border));
+  box-shadow: var(--panel-shadow-quiet);
+}
+
+.app-glass-strong {
+  background-color: color-mix(in srgb, var(--card) var(--glass-alpha-strong-percent), transparent);
+  border-color: color-mix(in srgb, white 80%, var(--border));
+  box-shadow: var(--panel-shadow);
+}
+
+.app-main-scroll .app-glass {
+  border-radius: 18px;
+}
+
+.app-main-scroll {
+  padding-top: calc(0.65rem + env(safe-area-inset-top, 0px));
+}
+
+.desktop-titlebar {
+  background: transparent;
+}
+
+.desktop-brand {
+  background: color-mix(in srgb, var(--card) 44%, transparent);
+  border: 1px solid color-mix(in srgb, white 52%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(1.08);
+  backdrop-filter: blur(18px) saturate(1.08);
+}
+
+.desktop-nav-dock {
+  max-width: min(700px, 58vw);
+  border: 1px solid color-mix(in srgb, white 58%, transparent);
+  background: color-mix(in srgb, var(--card) 36%, transparent);
+  box-shadow: 0 5px 20px rgba(20, 72, 82, 0.055);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+  backdrop-filter: blur(20px) saturate(1.1);
+}
+
+.desktop-top-link {
+  min-height: 46px;
+}
+
+.screen-title,
+.dashboard-display-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.screen-title {
+  font-size: clamp(1.65rem, 1.42rem + 0.55vw, 2.05rem);
+  line-height: 1.15;
+}
+
+.dashboard-heading {
+  font-size: clamp(2rem, 1.62rem + 1.05vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+}
+
+.clean-panel {
+  border: 1px solid var(--panel-line);
+  border-radius: var(--surface-radius);
+  background: var(--panel-bg);
+  box-shadow: var(--panel-shadow-quiet);
+}
+
+.clean-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dashboard-kpi {
+  position: relative;
+  min-height: 132px;
+  overflow: hidden;
+  border: 1px solid var(--panel-line);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card) 86%, transparent);
+  padding: 15px;
+  box-shadow: var(--panel-shadow-quiet);
+  -webkit-backdrop-filter: blur(18px) saturate(1.06);
+  backdrop-filter: blur(18px) saturate(1.06);
+}
+
+.dashboard-kpi::after {
+  content: "";
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  left: 15px;
+  height: 1px;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--foreground) 8%, transparent) 0 3px, transparent 3px 7px);
+}
+
+.dashboard-kpi-label {
+  color: color-mix(in srgb, var(--foreground) 52%, transparent);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.dashboard-kpi-value {
+  margin-top: 8px;
+  font-size: clamp(1.55rem, 1.3rem + 0.72vw, 2.05rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-kpi-note {
+  margin-top: 7px;
+  color: color-mix(in srgb, var(--foreground) 44%, transparent);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.dashboard-kpi-chart {
+  position: absolute;
+  right: 15px;
+  bottom: 24px;
+  left: 15px;
+  display: flex;
+  height: 27px;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.dashboard-kpi-chart > span {
+  min-height: 3px;
+  flex: 1;
+  border-radius: 1px;
+  background:
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--data-blue) 36%, transparent) 0 3px, transparent 3px 5px);
+}
+
+.dashboard-kpi-chart > span[data-active="true"] {
+  background:
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--primary) 70%, transparent) 0 3px, transparent 3px 5px);
+}
+
+.dashboard-rule {
+  height: 1px;
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+.dashboard-list-row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  min-height: 58px;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 7%, transparent);
+}
+
+.dashboard-list-row:last-child {
+  border-bottom: 0;
+}
+
+.dashboard-list-icon {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--data-blue) 7%, transparent);
+  color: color-mix(in srgb, var(--data-blue) 82%, var(--foreground));
+}
+
+.dashboard-value {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.dashboard-header {
+  position: relative;
+}
+
+.dashboard-focus {
+  background:
+    linear-gradient(128deg, color-mix(in srgb, var(--card) 94%, transparent) 0%, color-mix(in srgb, var(--card) 84%, transparent) 60%, color-mix(in srgb, var(--accent) 40%, transparent) 100%);
+}
+
+.dashboard-focus-orbit {
+  position: absolute;
+  right: -118px;
+  bottom: -176px;
+  width: 430px;
+  height: 430px;
+  border: 1px solid color-mix(in srgb, white 42%, transparent);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 48px color-mix(in srgb, white 7%, transparent),
+    0 0 0 104px color-mix(in srgb, white 5%, transparent);
+  pointer-events: none;
+}
+
+.dashboard-ring::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 999px;
+  border: 1px dashed color-mix(in srgb, var(--foreground) 9%, transparent);
+}
+
+.dashboard-action {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  background: var(--primary);
+  padding: 0 18px;
+  color: var(--primary-foreground);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 7px 18px color-mix(in srgb, var(--primary) 16%, transparent);
+  transition: transform 160ms var(--ease-out), background-color 160ms ease-out;
+}
+
+.dashboard-action:hover {
+  background: color-mix(in srgb, var(--primary) 88%, black);
+  transform: translateY(-1px);
+}
+
+.dashboard-action:active {
+  transform: translateY(0) scale(0.985);
+}
+
+.dashboard-action-quiet {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 5px;
+  border-radius: 10px;
+  padding: 0 10px;
+  color: color-mix(in srgb, var(--foreground) 58%, transparent);
+  font-size: 11px;
+  font-weight: 500;
+  transition: background-color 160ms ease-out, color 160ms ease-out;
+}
+
+.dashboard-action-quiet:hover {
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
+  color: var(--foreground);
+}
+
+.apple-segmented {
+  border-color: color-mix(in srgb, var(--foreground) 8%, transparent);
+  background: color-mix(in srgb, var(--card) 46%, transparent);
+}
+
+.apple-segment {
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: color-mix(in srgb, var(--foreground) 52%, transparent);
+}
+
+.apple-segment[data-active="true"],
+.apple-segment[aria-selected="true"] {
+  border-color: color-mix(in srgb, var(--primary) 13%, transparent);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  color: var(--primary);
+  box-shadow: 0 1px 2px rgba(21, 65, 74, 0.035);
+}
+
+.weekly-bar {
+  position: relative;
+  display: flex;
+  height: 148px;
+  align-items: flex-end;
+  gap: clamp(7px, 1.3vw, 16px);
+  padding: 15px 7px 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(14.285% - 1px), color-mix(in srgb, var(--foreground) 4%, transparent) calc(14.285% - 1px) 14.285%);
+}
+
+.weekly-bar::after {
+  content: "";
+  position: absolute;
+  inset: 15px 7px 28px;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 24%, color-mix(in srgb, var(--foreground) 5%, transparent) 24% calc(24% + 1px));
+}
+
+.weekly-bar > div {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.weekly-bar-track {
+  display: flex;
+  width: 100%;
+  max-width: 30px;
+  height: 104px;
+  align-items: flex-end;
+  overflow: hidden;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--foreground) 2.5%, transparent);
+}
+
+.weekly-bar-fill {
+  width: 100%;
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--data-blue) 76%, transparent) 0 4px, color-mix(in srgb, var(--data-blue) 36%, transparent) 4px 6px);
+}
+
+.weekly-bar > div[data-today="true"] .weekly-bar-fill {
+  background:
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--data-accent) 88%, transparent) 0 4px, color-mix(in srgb, var(--data-accent) 48%, transparent) 4px 6px);
+}
+
+.weekly-bar-label {
+  color: color-mix(in srgb, var(--foreground) 44%, transparent);
+  font-size: 9px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.forecast-rail {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  align-items: end;
+}
+
+.forecast-rail > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.forecast-rail-track {
+  display: flex;
+  width: 100%;
+  height: 66px;
+  align-items: flex-end;
+  border-radius: 4px;
+  background:
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--foreground) 4%, transparent) 0 2px, transparent 2px 5px);
+}
+
+.forecast-rail-track > span {
+  width: 100%;
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--data-blue) 62%, transparent) 0 3px, color-mix(in srgb, var(--data-blue) 26%, transparent) 3px 5px);
+}
+
+.forecast-rail > div:first-child .forecast-rail-track > span {
+  background:
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--data-accent) 86%, transparent) 0 3px, color-mix(in srgb, var(--data-accent) 46%, transparent) 3px 5px);
+}
+
+.week-date-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 7%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--card) 36%, transparent);
+}
+
+.week-date-cell {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  color: color-mix(in srgb, var(--foreground) 48%, transparent);
+  font-size: 9px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.week-date-cell[data-today="true"] {
+  background: color-mix(in srgb, var(--data-accent) 92%, white);
+  color: #fffaf0;
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--data-accent) 18%, transparent);
+}
+
+.desktop-nav-dock .desktop-top-label {
+  opacity: 0.92;
+}
+
+:root[data-touch="true"] .app-main-scroll {
+  padding-top: calc(0.65rem + env(safe-area-inset-top, 0px)) !important;
+}
+
+@media (max-width: 1199px) and (min-width: 1024px) {
+  .desktop-top-link {
+    min-width: 42px !important;
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .desktop-top-label {
+    display: none;
+  }
+
+  .desktop-nav-dock {
+    max-width: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .app-glass {
+    -webkit-backdrop-filter: blur(16px) saturate(1.04);
+    backdrop-filter: blur(16px) saturate(1.04);
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-kpi {
+    min-height: 124px;
+    padding: 13px;
+  }
+
+  .dashboard-kpi::after,
+  .dashboard-kpi-chart {
+    right: 13px;
+    left: 13px;
+  }
+
+  .weekly-bar {
+    height: 134px;
+    gap: 5px;
+    padding-right: 4px;
+    padding-left: 4px;
+  }
+
+  .weekly-bar::after {
+    right: 4px;
+    left: 4px;
+  }
+
+  .weekly-bar-track {
+    height: 94px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-action,
+  .dashboard-action-quiet {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .app-glass,
+  .dashboard-kpi,
+  .desktop-brand,
+  .desktop-nav-dock {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background-color: color-mix(in srgb, var(--card) 98%, transparent);
+  }
+}

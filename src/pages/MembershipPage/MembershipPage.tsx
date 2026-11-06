@@ -172,7 +172,7 @@ export default function MembershipPage() {
   }[orderStatus];
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-5 pb-8 pt-7">
+    <div className="mx-auto w-full max-w-4xl space-y-5 pb-8 pt-6">
       <header>
         <Link
           to="/settings"

@@ -235,7 +235,7 @@ export default function ProgressPage() {
   ];
 
   return (
-    <div className="space-y-8 pt-8">
+    <div className="mx-auto max-w-[1180px] space-y-6 pt-4 pb-8 md:pt-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="screen-title">{t('学习记录')}</h1>

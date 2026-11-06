@@ -59,7 +59,6 @@ const MORE_NAV: NavItem[] = [
   { path: '/updates', label: '更新中心', icon: CloudDownload, end: false, description: '云端内容与发布版本' },
   { path: '/settings', label: '设置', icon: Settings2, end: false, description: '外观、账号与提醒' },
 ];
-const DESKTOP_MORE_NAV = MORE_NAV;
 const MOBILE_MORE_NAV: NavItem[] = MORE_NAV;
 const MOBILE_PRIMARY_NAV = PRIMARY_NAV;
 
@@ -67,7 +66,20 @@ function isActive(pathname: string, item: NavItem): boolean {
   return item.end ? pathname === item.path : pathname.startsWith(item.path);
 }
 
-function TitleBar() {
+const TOP_NAV: NavItem[] = [
+  ...NAV,
+  ...MORE_NAV.filter((item) => !NAV.some((navItem) => navItem.path === item.path)),
+];
+
+function TitleBar({
+  pathname,
+  streakCount,
+  showWindowControls,
+}: {
+  pathname: string;
+  streakCount: number;
+  showWindowControls: boolean;
+}) {
   const [isMax, setIsMax] = useState(false);
   const { t } = useI18n();
 
@@ -82,41 +94,88 @@ function TitleBar() {
 
   return (
     <div
-      className="desktop-titlebar relative z-20 hidden h-9 shrink-0 items-center justify-between text-foreground lg:flex"
+      className="desktop-titlebar relative z-30 hidden h-[70px] shrink-0 items-center px-4 text-foreground lg:flex"
       style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
     >
-      <div className="flex items-center gap-2 pl-4">
-        <GraduationCap className="h-3.5 w-3.5 text-primary" />
-        <span className="text-xs font-medium text-foreground/58">{t('莫兰')}</span>
-      </div>
-      <div
-        className="flex h-full items-center"
-        style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
-      >
-        <button
-          type="button"
-          aria-label={t('最小化')}
-          onClick={() => controls?.minimize()}
-          className="flex h-full w-11 items-center justify-center text-foreground/42 transition-colors hover:bg-white/40 hover:text-foreground"
+      <div className="flex w-full items-center gap-3">
+        <Link
+          to="/"
+          className="desktop-brand flex shrink-0 items-center gap-2.5 rounded-[14px] px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45"
+          style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
         >
-          <Minus className="h-3.5 w-3.5" />
-        </button>
-        <button
-          type="button"
-          aria-label={isMax ? t('还原窗口') : t('最大化')}
-          onClick={() => controls?.maximize()}
-          className="flex h-full w-11 items-center justify-center text-foreground/42 transition-colors hover:bg-white/40 hover:text-foreground"
+          <span className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-primary text-primary-foreground shadow-sm">
+            <GraduationCap className="h-4 w-4" />
+          </span>
+          <span className="text-[15px] font-semibold tracking-[-0.03em]">{t('莫兰')}</span>
+        </Link>
+
+        <nav
+          className="desktop-nav-dock mx-auto flex min-w-0 items-center gap-0.5 rounded-[16px] p-1"
+          aria-label={t('主导航')}
+          style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
         >
-          <Square className="h-3 w-3" fill="currentColor" />
-        </button>
-        <button
-          type="button"
-          aria-label={t('关闭窗口')}
-          onClick={() => controls?.close()}
-          className="flex h-full w-11 items-center justify-center text-foreground/42 transition-colors hover:bg-destructive hover:text-white"
-        >
-          <X className="h-4 w-4" />
-        </button>
+          {TOP_NAV.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(pathname, item);
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.end}
+                title={t(item.description ?? item.label)}
+                className={cn(
+                  'desktop-top-link flex min-w-[66px] flex-col items-center justify-center gap-1 rounded-[12px] px-2 py-1.5 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45',
+                  active
+                    ? 'bg-white/82 text-foreground shadow-[0_2px_8px_rgba(24,66,70,0.08)]'
+                    : 'text-foreground/52 hover:bg-white/42 hover:text-foreground',
+                )}
+              >
+                <Icon className={cn('h-[15px] w-[15px]', active && 'text-primary')} strokeWidth={active ? 2 : 1.7} />
+                <span className="desktop-top-label whitespace-nowrap">{t(item.label)}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
+
+        <div className="flex shrink-0 items-center gap-1.5">
+          <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-white/52 bg-white/34 px-3 text-[11px] font-medium text-foreground/58">
+            <Flame className="h-3.5 w-3.5 text-primary" />
+            {streakCount}
+          </span>
+          <div
+            className="ml-1 flex h-full items-center"
+            style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
+          >
+            {showWindowControls && (
+              <>
+                <button
+                  type="button"
+                  aria-label={t('最小化')}
+                  onClick={() => controls?.minimize()}
+                  className="flex h-full w-11 items-center justify-center text-foreground/42 transition-colors hover:bg-white/40 hover:text-foreground"
+                >
+                  <Minus className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  aria-label={isMax ? t('还原窗口') : t('最大化')}
+                  onClick={() => controls?.maximize()}
+                  className="flex h-full w-11 items-center justify-center text-foreground/42 transition-colors hover:bg-white/40 hover:text-foreground"
+                >
+                  <Square className="h-3 w-3" fill="currentColor" />
+                </button>
+                <button
+                  type="button"
+                  aria-label={t('关闭窗口')}
+                  onClick={() => controls?.close()}
+                  className="flex h-full w-11 items-center justify-center text-foreground/42 transition-colors hover:bg-destructive hover:text-white"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -515,95 +574,15 @@ export const Layout = () => {
         <div className="moran-backdrop-wash absolute inset-0" />
       </div>
 
-      {!webTest && <TitleBar />}
+      <TitleBar pathname={pathname} streakCount={streakCount} showWindowControls={!webTest} />
 
       <div
         className={cn(
-          'app-frame relative z-10 flex min-h-0 flex-1 gap-0 p-0 lg:gap-3 lg:p-3',
-          webTest ? 'lg:pt-3' : 'lg:pt-0',
+          'app-frame relative z-10 flex min-h-0 flex-1 p-0 lg:p-3 lg:pt-1',
+          webTest && 'lg:pt-3',
         )}
       >
-        <aside className="app-sidebar-shell app-sidebar app-glass hidden h-full w-[248px] shrink-0 flex-col overflow-hidden rounded-[28px] lg:flex">
-          <Link
-            to="/"
-            className="flex items-center gap-3 px-5 pb-5 pt-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45"
-          >
-            <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-primary text-primary-foreground">
-              <GraduationCap className="h-5 w-5" />
-            </span>
-            <span className="leading-tight">
-              <span className="block text-base font-semibold tracking-[-0.02em]">{t('莫兰')}</span>
-              <span className="mt-0.5 block text-xs text-foreground/50">{t('英语词汇学习')}</span>
-            </span>
-          </Link>
-          {webTest && (
-            <span className="mx-5 mb-3 inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/15 bg-primary/8 px-2.5 py-1 text-[10px] font-medium text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              {t('网页测试版')}
-            </span>
-          )}
-
-          <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-2" aria-label={t('主导航')}>
-            {PRIMARY_NAV.map((item) => {
-              const active = isActive(pathname, item);
-              const Icon = item.icon;
-              return (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  end={item.end}
-                  className={cn(
-                    'flex min-h-11 items-center gap-3 rounded-[16px] px-3 text-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45',
-                    active
-                      ? 'bg-primary/10 text-foreground'
-                      : 'text-foreground/62 hover:bg-primary/6 hover:text-foreground',
-                  )}
-                >
-                  <Icon className={cn('h-[18px] w-[18px]', active && 'text-primary')} />
-                  <span>{t(item.label)}</span>
-                </NavLink>
-              );
-            })}
-          </nav>
-
-          <div className="mx-3 mb-2 rounded-[20px] border border-white/55 bg-white/22 p-2">
-            <p className="px-1.5 pt-0.5 text-[10px] font-medium tracking-wide text-foreground/40">{t('更多')}</p>
-            <div className="mt-1 grid grid-cols-2 gap-1.5">
-              {DESKTOP_MORE_NAV.map((item) => {
-                const active = isActive(pathname, item);
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    end={item.end}
-                    title={t(item.description ?? '')}
-                    className={cn(
-                      'flex min-h-[52px] flex-col justify-between rounded-[14px] border p-2 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45',
-                      active
-                        ? 'border-primary/35 bg-primary/10 text-primary'
-                        : 'border-white/45 bg-white/18 text-foreground/58 hover:bg-white/38 hover:text-foreground',
-                    )}
-                  >
-                    <Icon className={cn('h-[15px] w-[15px]', active && 'text-primary')} />
-                    <span>{t(item.label)}</span>
-                  </NavLink>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="space-y-2 p-3">
-            <div className="rounded-[18px] bg-white/28 px-4 py-3">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Flame className="h-4 w-4 text-primary" />
-                {t('连续学习 {n} 天', { n: streakCount })}
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        <div className="app-workspace-shell app-workspace app-glass app-glass-soft min-w-0 flex-1 overflow-hidden rounded-none lg:rounded-[28px]">
+        <div className="app-workspace-shell min-w-0 flex-1 overflow-hidden">
           <main
             ref={workspaceRef}
             className="app-main-scroll scrollbar-hidden relative h-full overflow-y-auto px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(0.5rem+env(safe-area-inset-top,0px))] sm:px-6 lg:px-8 lg:pb-8 lg:pt-2"

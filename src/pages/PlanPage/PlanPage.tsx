@@ -34,8 +34,8 @@ type ActivityMap = Record<string, { newWords: number; reviews: number }>;
 
 function PlanRing({ value }: { value: number }) {
   const { t } = useI18n();
-  const size = 164;
-  const stroke = 9;
+  const size = 148;
+  const stroke = 7;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
 
@@ -63,7 +63,7 @@ function PlanRing({ value }: { value: number }) {
         />
       </svg>
       <div className="pointer-events-none col-start-1 row-start-1 flex flex-col items-center justify-center">
-        <strong className="text-[36px] font-normal tabular-nums tracking-[-0.05em]">
+        <strong className="text-[31px] font-medium tabular-nums tracking-[-0.05em]">
           <AnimatedNumber value={value} suffix="%" />
         </strong>
         <span className="text-xs text-foreground/55">{t('今日完成')}</span>
@@ -79,7 +79,7 @@ function TaskRow({ task }: { task: StudyTask }) {
   return (
     <Link
       to={task.route}
-      className="grid gap-4 rounded-[22px] bg-white/24 p-4 transition-colors hover:bg-white/36 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45 sm:grid-cols-[auto_minmax(0,1fr)_minmax(150px,0.4fr)_auto] sm:items-center"
+      className="grid gap-3 py-4 transition-colors first:pt-1 last:pb-1 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45 sm:grid-cols-[auto_minmax(0,1fr)_minmax(150px,0.4fr)_auto] sm:items-center sm:gap-4"
     >
       <Icon className={cn('h-5 w-5', task.done ? 'text-primary' : 'text-foreground/55')} />
       <div className="min-w-0">
@@ -91,7 +91,7 @@ function TaskRow({ task }: { task: StudyTask }) {
         </div>
         <p className="mt-1 text-xs leading-5 text-foreground/55">{t(task.description)}</p>
       </div>
-      <div>
+      <div className="max-w-sm">
         <div className="flex items-end justify-between gap-3 text-xs">
           <span className="text-foreground/55">
             {task.target === 0 ? t('无需安排') : `${task.completed} / ${task.target} ${t(task.unit)}`}
@@ -106,7 +106,7 @@ function TaskRow({ task }: { task: StudyTask }) {
         </div>
       </div>
       {task.done ? (
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/12 text-primary" aria-label={t('已完成')}>
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary" aria-label={t('已完成')}>
           <Check className="h-4 w-4" />
         </span>
       ) : (
@@ -209,7 +209,7 @@ function StudyCalendar({ dailyActivity }: { dailyActivity: ActivityMap }) {
   const selectDay = useCallback((key: string) => setSelectedKey(key), []);
 
   return (
-    <section className="app-glass rounded-[28px] p-3.5">
+    <section className="app-glass rounded-[22px] p-4">
       <div className="flex items-center justify-between gap-2">
         <h2 className="flex items-center gap-1.5 text-sm font-semibold">
           <CalendarDays className="h-4 w-4 text-primary" /> {t('学习日历')}
@@ -309,7 +309,7 @@ export default function PlanPage() {
   }).format(new Date());
 
   return (
-    <div className="mx-auto w-full max-w-[1100px] pb-8 pt-6 md:pt-10">
+    <div className="mx-auto w-full max-w-[1180px] pb-8 pt-4 md:pt-8">
       <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h1 className="screen-title">{t('今日学习计划')}</h1>
@@ -317,19 +317,19 @@ export default function PlanPage() {
             {dateLabel} · {t('按顺序完成，进度会随真实学习自动更新。')}
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground sm:flex sm:flex-wrap sm:items-center">
-          <span className="rounded-full bg-white/24 px-3 py-1.5">{t('连续 {n} 天', { n: streakCount })}</span>
-          <span className="rounded-full bg-white/24 px-3 py-1.5">{t('已学习 {n} 分钟', { n: minutes })}</span>
+        <div className="flex flex-wrap items-center gap-2 text-[11px] text-foreground/52">
+          <span className="rounded-full border border-white/60 bg-card/56 px-3 py-1.5">{t('连续 {n} 天', { n: streakCount })}</span>
+          <span className="rounded-full border border-white/60 bg-card/56 px-3 py-1.5">{t('已学习 {n} 分钟', { n: minutes })}</span>
         </div>
       </header>
 
-      <section className="mt-8 grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_minmax(270px,0.58fr)]">
-        <div className="app-glass app-glass-strong rounded-[28px] p-6 md:p-7">
+      <section className="mt-7 grid items-start gap-3 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.56fr)]">
+        <div className="app-glass app-glass-strong rounded-[22px] p-5 md:p-6">
           <div className="grid gap-6 md:grid-cols-[auto_1fr] md:items-center">
             <PlanRing value={completion} />
-            <div>
-              <p className="text-sm text-foreground/55">{t('下一项')}</p>
-              <h2 className="mt-2 text-2xl font-normal tracking-[-0.03em]">
+            <div className="min-w-0">
+              <p className="text-[11px] text-foreground/46">{t('下一项')}</p>
+              <h2 className="mt-2 text-xl font-medium tracking-[-0.03em]">
                 {next ? t(next.title) : t('今天的任务已经完成')}
               </h2>
               <p className="mt-2 max-w-xl text-sm leading-6 text-foreground/58">
@@ -351,7 +351,7 @@ export default function PlanPage() {
         <StudyCalendar dailyActivity={progress.dailyActivity} />
       </section>
 
-      <section className="app-glass mt-4 rounded-[28px] p-4 md:p-6">
+      <section className="app-glass mt-3 rounded-[22px] p-4 md:p-6">
         <div className="mb-4 flex items-end justify-between gap-4 px-1">
           <div>
             <h2 className="text-base font-medium">{t('今天做什么')}</h2>
@@ -361,7 +361,7 @@ export default function PlanPage() {
           </div>
           <span className="hidden text-xs text-foreground/45 sm:block">{t('完成量来自真实学习动作')}</span>
         </div>
-        <div className="space-y-2">
+        <div className="divide-y divide-foreground/7">
           {tasks.map((task) => <TaskRow key={task.id} task={task} />)}
         </div>
       </section>

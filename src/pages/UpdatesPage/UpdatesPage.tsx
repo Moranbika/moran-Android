@@ -67,7 +67,7 @@ export default function UpdatesPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-4 pb-8 pt-7">
+    <div className="mx-auto w-full max-w-4xl space-y-4 pb-8 pt-6">
       <header>
         <h1 className="screen-title flex items-center gap-2">
           <CloudDownload className="h-6 w-6 text-primary" />

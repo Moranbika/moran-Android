@@ -161,7 +161,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="mx-auto flex max-w-xl flex-col gap-6 pt-8">
+    <div className="mx-auto flex max-w-4xl flex-col gap-4 pt-4 md:pt-7">
       <div>
         <h1 className="screen-title flex items-center gap-2">
           <Settings2 className="h-6 w-6 text-primary" /> {t('设置')}

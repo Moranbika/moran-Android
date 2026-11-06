@@ -533,7 +533,7 @@ function VocabSession() {
           {!allDone && current ? (
             <div key={currentId} className="w-full space-y-4 cursor-pointer animate-card-in" onClick={!revealed ? () => setRevealed(true) : undefined}>
               {/* 记忆卡片：点击整个学习背景均显示释义并进入自评 */}
-              <Card className="mx-auto max-w-4xl overflow-hidden shadow-2xl shadow-primary/5 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-0.5">
+              <Card className="mx-auto max-w-4xl overflow-hidden rounded-[22px]">
                 <div className="p-6 pb-4 text-center">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">
@@ -558,23 +558,27 @@ function VocabSession() {
                       <Heart className="h-[18px] w-[18px]" fill={currentFavorited ? 'currentColor' : 'none'} />
                     </button>
                   </div>
-                  <div className="mt-6 flex items-center justify-center gap-2">
-                    <p className="text-5xl font-bold tracking-tight">{current.word}</p>
+                  <div className="mx-auto mt-6 flex max-w-full flex-col items-center justify-center gap-2 sm:flex-row">
+                    <p className="max-w-full break-words text-center text-[clamp(2rem,8vw,3rem)] font-semibold leading-[1.05] tracking-[-0.045em]">
+                      {current.word}
+                    </p>
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         speak(current.word);
                       }}
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-500/10 text-teal-600 hover:bg-teal-500/20"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/8 text-primary hover:bg-primary/12"
                       title={t('播放读音')}
                     >
                       <Volume2 className="h-5 w-5" />
                     </button>
                   </div>
-                  <p className="mt-2 text-lg text-muted-foreground">
-                    {current.phonetic} · {current.pos}
-                  </p>
+                  {(current.phonetic || current.pos) && (
+                    <p className="mt-2 text-lg text-muted-foreground">
+                      {[current.phonetic, current.pos].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
                 </div>
 
                 {!revealed ? (
