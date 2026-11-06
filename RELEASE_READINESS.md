@@ -1,6 +1,6 @@
 # 莫兰上架准备清单
 
-更新日期：2026-10-30
+更新日期：2026-11-04
 
 当前范围：只公开发布 HarmonyOS / AppGallery，同一 HAP 覆盖手机、平板与鸿蒙电脑（2in1）。Windows 继续作为私有安装版维护；iOS 公开商店与 Android 不在本次范围。
 
@@ -10,10 +10,12 @@
 
 `1.0.0（2）` 已于 2026-10-30 重新提交，APP 备案通过后 AGC 当前状态已更新为“正在等待审核”。上传包已通过合法性与素材校验，使用仍生效的发布证书和新建 Profile；当前只需跟进审核结果，无需重复上传或提交。
 
+2026-11-04 私有构建已恢复 32 本词书（3,588 个词）和 150 个核心词，内容格式升级为 `schemaVersion=4`，旧 ECDICT 远程内容不会再覆盖内置词书。Windows 已覆盖安装并验证；iOS IPA 与鸿蒙 release 签名 HAP / AGC APP 已重建。新内容服务包已生成，但尚未部署到 `moranenglish.cn`；公开商店版本继续使用内置内容。
+
 ## 已完成
 
 - 新增独立公开商店构建；商店包不包含设备授权接口、设备锁定页面或私有 HTTP 地址。
-- 新增可视化内容后台：词书、单词、听力、真题、草稿、发布、历史和 JSON 备份均可操作。
+- 新增可视化内容后台：词书、单词、草稿、发布、历史和 JSON 备份均可操作。
 - 新增 App 内容版本检查与 IndexedDB 离线缓存；内容服务失败时回退到上一缓存或内置内容。
 - 内容服务和账号服务使用不同构建变量，启用内容更新不会自动上传手机号。
 - 注册页移除演示短信和虚假验证码，保留图形人机验证。
@@ -40,7 +42,7 @@
 - Electron E2E：12 个应用路由与桌面/平板/手机三档响应式检查通过
 - Admin E2E：登录、四类内容编辑器、草稿保存、发布 v2 与 900px 自适应通过
 - 已安装 Windows：登录页正常，运行时错误 0
-- HarmonyOS 7.0 手机模拟器：调试签名包安装并启动，首页、词汇、刷题、听力页面通过；在线音频因模拟器无服务未验证
+- HarmonyOS 7.0 手机模拟器：调试签名包安装并启动，首页、词书和词汇页面通过
 - HarmonyOS 7.0 MateBook Pro（2in1）模拟器：通过
 - 正式签名 HAP：`hap-sign-tool verify-app` 通过，证书链、代码签名、权限签名和 Profile 合法
 - AGC 上传包：包名、`1.0.0（2）`、设备类型和合法性检查通过，状态“已达标”
@@ -49,17 +51,19 @@
 
 ## 当前可交付产物
 
-- 正式签名 HAP：`release/platforms/harmony/Moran-HarmonyOS-1.0.0-no-payments-signed.hap`
-- HAP SHA-256：`8920E466BB2FC51C51D458390636AEED75ABDDA8192E4ED9E11408F50E817FC8`（22,027,696 字节）
-- AGC 上传包：`release/platforms/harmony/Moran-HarmonyOS-1.0.0-no-payments.app`
-- AGC 上传包 SHA-256：`91918110B17FE4EB2E84094E6F9FC5D923042206F8639FAF157BDEBE3B8D8E91`（18,958,042 字节）
+- 正式签名 HAP：`release/platforms/harmony/Moran-HarmonyOS-1.0.0-books-signed.hap`
+- HAP SHA-256：`76D39F610886B355474AF1D061ABAE3E38F6EB7836BB814F26589CD44FF257D4`（2,472,318 字节）
+- AGC 上传包：`release/platforms/harmony/Moran-HarmonyOS-1.0.0-books.app`
+- AGC 上传包 SHA-256：`D1A270E383E71D3AB9FB77ADCBA7FA2282DAD23E68068B4DEB23C98922BD15F3`（1,284,639 字节）
 - Harmony 模拟器调试签名 HAP：`release/platforms/harmony/Moran-HarmonyOS-1.0.0-emulator-signed.hap`，19,302,086 字节，SHA-256 `C2D2B79024A933382E460D8F5C5DE476707AE90869386881E31C1DDA1E408025`
 - AppGallery 提审资料：`HARMONY_APPGALLERY_SUBMISSION.md`
 - 商店截图：`release/platforms/harmony/screenshots/store-2026-10-28/phone/`（1080×1920）与 `desktop/`（1920×1080）
 - Windows 私有安装包：`release/platforms/windows/莫兰-Setup.exe`
-- Windows 安装包 SHA-256：`9F8622B87B3285474A53AF00BB08ED6A93A25651C0516990A17182606BAF0423`
-- 内容后台部署包：`release/content-admin/moran-content-admin.zip`
-- 内容后台 ZIP SHA-256：`508825BE9C0A5E09A6F328CADE988E4C79D4D2200CE9CD9E8652F6AB605A18CE`（470,678 字节）
+- Windows 安装包 SHA-256：`E7E359092D7438F3EE63497DC050CFA8C11EE0EC9501D9A187C5908E4AFB8AA1`（147,578,414 字节）
+- iOS 未签名 IPA：`release/platforms/ios/Moran-unsigned.ipa`
+- iOS IPA SHA-256：`332163E9FF51636953E0371B4BE61FBEDBFBCB29F4384400E08768419E5769FC`（3,523,395 字节）
+- 内容后台部署包：`release/content-admin/moran-content-admin-books-20261104.zip`
+- 内容后台 ZIP SHA-256：`69F806AB8DF0C3283BE6EBF8B066861169DF7E45D4715E94CC615C7822520EA3`（207,925 字节）
 - 数据中心：登录在线、活跃终端、访问/访客趋势、月度/年度流量、学习、用户、订单、收入和系统健康；每 20 秒刷新，并可导出 CSV。
 - 后台截图：`release/content-admin/`
 
@@ -94,9 +98,8 @@
 
 ### 5. 内容版权
 
-- 确认四六级真题、听力音频、英文文章、译文、选项和解析拥有分发授权。
-- 对第三方发音与音频服务保留许可或使用依据。
-- 无法确认授权的内容必须替换成自有、公版或已授权内容后再提审。
+- 当前内置词书根据旧版本地内容备份恢复，只保留英文单词、中文释义和分类，去除了音标、例句与旧复习数据。
+- 公开发布前必须确认这批恢复词书及其教材名称的使用授权；未确认时应继续使用 ECDICT MIT 版本或取得书面许可，不得把本地构建验收等同于商店版权审核通过。
 
 ### 6. AGC 审核资料
 
@@ -108,7 +111,7 @@
 ### 7. 真机最终验收
 
 - 当前没有连接 HarmonyOS 真机，正式包尚缺真机启动验收。
-- 完成注册、登录、词汇、听力、刷题、模考、设置、重启持久化和账号删除。
+- 完成注册、登录、词书、词汇、设置、重启持久化和账号删除。
 - 在鸿蒙电脑上确认窗口缩放、侧栏、长文本、图表和触控/鼠标交互。
 
 ## 可选但建议

@@ -71,7 +71,7 @@ export default function WebTestNotice() {
           <div className="flex gap-3 rounded-2xl border border-white/70 bg-white/55 px-4 py-3">
             <Headphones className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
             <p className="text-sm leading-6 text-foreground/72">
-              {t('听力音频需要联网；建议同时测试手机和电脑浏览器。')}
+              {t('在线发音需要联网；建议同时测试手机和电脑浏览器。')}
             </p>
           </div>
         </div>

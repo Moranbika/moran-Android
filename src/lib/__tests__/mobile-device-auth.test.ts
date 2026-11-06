@@ -10,12 +10,12 @@ describe('mobile device authorization', () => {
     vi.unstubAllGlobals();
   });
 
-  it('builds a stable CET6 device code from the native identifier', async () => {
+  it('builds a stable Moran device code from the native identifier', async () => {
     const first = await buildMobileDeviceCode('device-identifier-1');
     const second = await buildMobileDeviceCode('device-identifier-1');
     const other = await buildMobileDeviceCode('device-identifier-2');
 
-    expect(first).toMatch(/^CET6-[A-F0-9]{32}$/);
+    expect(first).toMatch(/^MORAN-[A-F0-9]{32}$/);
     expect(second).toBe(first);
     expect(other).not.toBe(first);
   });
@@ -26,9 +26,9 @@ describe('mobile device authorization', () => {
       json: async () => ({ authorized: true }),
     }));
 
-    await expect(checkMobileDeviceAuthorization('CET6-TEST', '0.2.9', 'ios')).resolves.toEqual({
+    await expect(checkMobileDeviceAuthorization('MORAN-TEST', '0.2.9', 'ios')).resolves.toEqual({
       authorized: true,
-      deviceSn: 'CET6-TEST',
+      deviceSn: 'MORAN-TEST',
       reason: '',
     });
   });
@@ -36,9 +36,9 @@ describe('mobile device authorization', () => {
   it('fails closed when the authorization service is unavailable', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
 
-    await expect(checkMobileDeviceAuthorization('CET6-TEST', '0.2.9', 'harmony')).resolves.toEqual({
+    await expect(checkMobileDeviceAuthorization('MORAN-TEST', '0.2.9', 'harmony')).resolves.toEqual({
       authorized: false,
-      deviceSn: 'CET6-TEST',
+      deviceSn: 'MORAN-TEST',
       reason: '设备验证服务暂不可用，请联网后重试。',
     });
   });
@@ -49,7 +49,7 @@ describe('mobile device authorization', () => {
       json: async () => ({}),
     }));
 
-    await expect(checkMobileDeviceAuthorization('CET6-TEST', '0.2.9', 'ios')).resolves.toMatchObject({
+    await expect(checkMobileDeviceAuthorization('MORAN-TEST', '0.2.9', 'ios')).resolves.toMatchObject({
       authorized: false,
       reason: DEVICE_MESSAGE,
     });

@@ -17,7 +17,7 @@ Existing React 19 + TypeScript + Vite application, shared by HarmonyOS phone, ta
 
 ## Product Purpose
 
-莫兰 helps learners prepare for CET-4/6 through a calm, local-first study experience. The content service lets the owner publish corrections and new learning material without shipping a new app build.
+莫兰 helps learners build general English vocabulary through a calm, local-first study experience. The content service lets the owner publish vocabulary corrections and new learning material without shipping a new app build.
 
 ## Positioning
 

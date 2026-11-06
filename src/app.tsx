@@ -6,12 +6,9 @@ import SettingsProvider from '@/components/SettingsProvider';
 import { I18nProvider } from '@/context/i18n-context';
 import HomePage from '@/pages/HomePage/HomePage';
 import PlanPage from '@/pages/PlanPage/PlanPage';
-import MockExamPage from '@/pages/MockExamPage/MockExamPage';
 import BooksPage from '@/pages/BooksPage/BooksPage';
 import BookWordsPage from '@/pages/BookWordsPage/BookWordsPage';
 import VocabPage from '@/pages/VocabPage/VocabPage';
-import ListeningPage from '@/pages/ListeningPage/ListeningPage';
-import PracticePage from '@/pages/PracticePage/PracticePage';
 import ProgressPage from '@/pages/ProgressPage/ProgressPage';
 import LoginPage from '@/pages/LoginPage/LoginPage';
 import RegisterPage from '@/pages/RegisterPage/RegisterPage';
@@ -48,12 +45,9 @@ export default function App() {
                 <Route element={<RequireAuth><Layout /></RequireAuth>}>
                   <Route index element={<HomePage />} />
                   <Route path="plan" element={<PlanPage />} />
-                  <Route path="mock-exam" element={<MockExamPage />} />
                   <Route path="books" element={<BooksPage />} />
                   <Route path="book/:id" element={<BookWordsPage />} />
                   <Route path="vocab" element={<VocabPage />} />
-                  <Route path="listening" element={<ListeningPage />} />
-                  <Route path="practice" element={<PracticePage />} />
                   <Route path="progress" element={<ProgressPage />} />
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="updates" element={<UpdatesPage />} />

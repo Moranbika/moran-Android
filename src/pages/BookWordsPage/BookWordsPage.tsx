@@ -234,7 +234,7 @@ export default function BookWordsPage() {
           <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
             {normalizedQuery
               ? t('本词书没有匹配“{query}”的单词。', { query: query.trim() })
-              : t('该书暂未内置词库，请选择内置词书（大学六级 / 初中英语各册 / 小学英语）查看单词。')}
+              : t('该书暂未内置词库，请选择内置词书查看单词。')}
           </div>
         )}
         {normalizedQuery && visibleGroups.length > 0 && (

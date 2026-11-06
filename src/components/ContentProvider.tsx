@@ -10,8 +10,6 @@ import {
 } from '@/context/content-context';
 import { VOCAB_BOOKS } from '@/data/books';
 import { VOCAB_WORDS } from '@/data/words';
-import { LISTENING_SETS } from '@/data/listening';
-import { EXAM_SETS } from '@/data/practice';
 import { readCachedContent, writeCachedContent } from '@/lib/content-cache';
 import {
   contentApiEnabled,
@@ -20,11 +18,9 @@ import {
 } from '@/lib/content-api';
 
 const BUNDLED_CONTENT: ContentBundle = {
-  schemaVersion: 1,
+  schemaVersion: 4,
   books: VOCAB_BOOKS,
   coreWords: VOCAB_WORDS,
-  listeningSets: LISTENING_SETS,
-  examSets: EXAM_SETS,
 };
 
 export default function ContentProvider({ children }: { children: ReactNode }) {

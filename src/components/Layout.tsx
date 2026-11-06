@@ -4,7 +4,6 @@
 import { NavLink, Link, Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
-  AlarmClock,
   BarChart3,
   BookOpen,
   CalendarCheck2,
@@ -12,12 +11,10 @@ import {
   CloudDownload,
   Flame,
   GraduationCap,
-  Headphones,
   LayoutDashboard,
   Library,
   Minus,
   MoreHorizontal,
-  PenLine,
   Settings2,
   Sparkles,
   Square,
@@ -50,26 +47,20 @@ const NAV: readonly NavItem[] = [
   { path: '/plan', label: '今日计划', icon: CalendarCheck2, end: false },
   { path: '/books', label: '词书库', icon: Library, end: false },
   { path: '/vocab', label: '词汇', icon: BookOpen, end: false },
-  { path: '/listening', label: '听力', icon: Headphones, end: false },
-  { path: '/practice', label: '刷题', icon: PenLine, end: false },
   { path: '/progress', label: '学习记录', icon: BarChart3, end: false },
 ];
 
-const PRIMARY_NAV = NAV.filter((item) => ['/', '/plan', '/books', '/practice'].includes(item.path));
+const PRIMARY_NAV = NAV.filter((item) => ['/', '/plan', '/books', '/vocab'].includes(item.path));
 const MORE_NAV: NavItem[] = [
   ...NAV.filter((item) => ['/progress'].includes(item.path)).map((item) => ({
     ...item,
     description: '遗忘曲线与统计',
   })),
-  { path: '/mock-exam', label: '限时模考', icon: AlarmClock, end: false, description: '130 分钟完整试卷' },
   { path: '/updates', label: '更新中心', icon: CloudDownload, end: false, description: '云端内容与发布版本' },
   { path: '/settings', label: '设置', icon: Settings2, end: false, description: '外观、账号与提醒' },
 ];
 const DESKTOP_MORE_NAV = MORE_NAV;
-const MOBILE_MORE_NAV: NavItem[] = [
-  { path: '/listening', label: '听力', icon: Headphones, end: false, description: '真题音频与原文' },
-  ...MORE_NAV,
-];
+const MOBILE_MORE_NAV: NavItem[] = MORE_NAV;
 const MOBILE_PRIMARY_NAV = PRIMARY_NAV;
 
 function isActive(pathname: string, item: NavItem): boolean {
@@ -96,7 +87,7 @@ function TitleBar() {
     >
       <div className="flex items-center gap-2 pl-4">
         <GraduationCap className="h-3.5 w-3.5 text-primary" />
-        <span className="text-xs font-medium text-foreground/58">{t('莫兰')} · CET-6</span>
+        <span className="text-xs font-medium text-foreground/58">{t('莫兰')}</span>
       </div>
       <div
         className="flex h-full items-center"
@@ -309,7 +300,7 @@ function MobileNav({ pathname, onActiveTab }: { pathname: string; onActiveTab?: 
             </div>
             <div className="pt-2">
               <h2 className="text-lg font-semibold">{t('更多功能')}</h2>
-              <p className="mt-1 text-xs text-muted-foreground">{t('记录、模考、更新与设置')}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t('记录、更新与设置')}</p>
             </div>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {MOBILE_MORE_NAV.map((item, index) => {
@@ -542,7 +533,7 @@ export const Layout = () => {
             </span>
             <span className="leading-tight">
               <span className="block text-base font-semibold tracking-[-0.02em]">{t('莫兰')}</span>
-              <span className="mt-0.5 block text-xs text-foreground/50">{t('英语六级学习')}</span>
+              <span className="mt-0.5 block text-xs text-foreground/50">{t('英语词汇学习')}</span>
             </span>
           </Link>
           {webTest && (

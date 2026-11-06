@@ -40,7 +40,10 @@ server/*.db-*
 server/_test_commerce/
 server/_test_run/
 server/_private/
+server/remote-deploy.log
+server/cleanup-legacy-backups.log
 sideloadlydaemon.log
 .codex-agc-description.txt
+moran-server.rdp
 $null
 !server/admin-icons/*.png

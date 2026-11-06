@@ -25,6 +25,7 @@ import {
   normalizeProgress,
   progressSnapshotsEqual,
 } from '@/lib/progress-sync';
+import { VOCAB_WORDS } from '@/data/words';
 
 const CLOUD_SYNC_INTERVAL_MS = 30_000;
 
@@ -72,12 +73,7 @@ function buildMockProgress(): IProgress {
     studyLog[day] = 1500 + ((i * 733) % 1500);
   });
 
-  // 词 ID：一年级上册 g1-1..g1-58（全部学完）；三年级下册 g3b-1..g3b-40（35%）
-  const g1Ids: string[] = [];
-  for (let i = 1; i <= 58; i++) g1Ids.push(`g1-${i}`);
-  const g3bIds: string[] = [];
-  for (let i = 1; i <= 40; i++) g3bIds.push(`g3b-${i}`);
-  const allIds = [...g1Ids, ...g3bIds]; // 98 词
+  const allIds = VOCAB_WORDS.slice(0, 98).map((word) => word.id);
 
   // 分配：68% mastered（记的很准）、10% 模糊、22% 忘记
   const masteredCount = Math.round(allIds.length * 0.68); // 67

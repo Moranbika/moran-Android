@@ -104,7 +104,7 @@ function VocabSession() {
   const [searchParams] = useSearchParams();
   const focusMode = searchParams.get('mode');
   const currentBook = content.books.find((b) => b.id === settings.selectedBookId) ?? content.books[0];
-  // 学习的词：内置词书用该书词汇，否则回退到内置六级词库
+  // 学习的词：内置词书用该书词汇，否则回退到内置核心词库
   const currentWords = useMemo(
     () => (currentBook?.builtin && currentBook.units?.length ? bookWords(currentBook) : content.coreWords),
     [content.coreWords, currentBook],

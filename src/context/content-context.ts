@@ -1,17 +1,11 @@
 import { createContext, useContext } from 'react';
-import type {
-  IListeningSet,
-  IVocabWord,
-  IExamSet,
-  VocabBook,
-} from '@/lib/content-types';
+import type { IVocabWord } from '@/data/words';
+import type { VocabBook } from '@/data/books';
 
 export interface ContentBundle {
-  schemaVersion: 1;
+  schemaVersion: 4;
   books: VocabBook[];
   coreWords: IVocabWord[];
-  listeningSets: IListeningSet[];
-  examSets: IExamSet[];
 }
 
 export type ContentSource = 'bundled' | 'cache' | 'remote';
@@ -43,27 +37,15 @@ export function useContent(): ContentContextValue {
 export function isContentBundle(value: unknown): value is ContentBundle {
   if (!value || typeof value !== 'object') return false;
   const bundle = value as Partial<ContentBundle>;
-  return bundle.schemaVersion === 1
+  return bundle.schemaVersion === 4
     && Array.isArray(bundle.books)
     && Array.isArray(bundle.coreWords)
-    && Array.isArray(bundle.listeningSets)
-    && Array.isArray(bundle.examSets)
     && bundle.books.every((book) => (
       typeof book?.id === 'string'
       && typeof book?.name === 'string'
       && Array.isArray(book?.units)
     ))
-    && bundle.coreWords.every((word) => typeof word?.id === 'string' && typeof word?.word === 'string')
-    && bundle.listeningSets.every((set) => (
-      typeof set?.id === 'string'
-      && typeof set?.title === 'string'
-      && Array.isArray(set?.sections)
-    ))
-    && bundle.examSets.every((set) => (
-      typeof set?.id === 'string'
-      && typeof set?.title === 'string'
-      && Array.isArray(set?.passages)
-    ));
+    && bundle.coreWords.every((word) => typeof word?.id === 'string' && typeof word?.word === 'string');
 }
 
 export function contentRefreshOutcome(

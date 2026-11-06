@@ -5,7 +5,6 @@
 import { createContext, useContext } from 'react';
 import type { VocabBook } from '@/data/books';
 import type { AvatarId, ThemeId, WallpaperId } from '@/lib/appearance';
-import type { PlanIntensity } from '@/lib/study-plan';
 
 export type LoginMethod = 'wechat' | 'qq' | 'apple' | 'account';
 export type LanguagePreference = 'zh' | 'en' | 'system';
@@ -19,8 +18,6 @@ export interface ISettings {
   accent: 'us' | 'uk'; // 发音：美音 / 英音
   accountId?: string;
   nickname: string;
-  examDate: string;
-  planIntensity: PlanIntensity;
   wallpaper: WallpaperId;
   theme: ThemeId;
   avatar: AvatarId;
@@ -36,8 +33,6 @@ export interface ISettingsContextValue {
   setMemoryMode: (i: number) => void;
   setAccent: (a: 'us' | 'uk') => void;
   setNickname: (nickname: string) => void;
-  setExamDate: (date: string) => void;
-  setPlanIntensity: (intensity: PlanIntensity) => void;
   setWallpaper: (wallpaper: WallpaperId) => void;
   setTheme: (theme: ThemeId) => void;
   setAvatar: (avatar: AvatarId) => void;
@@ -49,15 +44,13 @@ export interface ISettingsContextValue {
 }
 
 export const DEFAULT_SETTINGS: ISettings = {
-  selectedBookId: 'cet6',
+  selectedBookId: 'core',
   loginMethod: null,
   loggedIn: false,
   dailyTarget: 15,
   memoryMode: 0,
   accent: 'us',
   nickname: '',
-  examDate: '',
-  planIntensity: 'standard',
   wallpaper: 'dawn',
   theme: 'mist',
   avatar: 'leaf',

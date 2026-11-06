@@ -8,7 +8,6 @@ import {
 } from '@/context/settings-context';
 import type { ISettings, LoginMethod } from '@/context/settings-context';
 import type { LanguagePreference } from '@/context/settings-context';
-import type { PlanIntensity } from '@/lib/study-plan';
 import type { VocabBook } from '@/data/books';
 import {
   DEFAULT_GLASS_OPACITY,
@@ -107,14 +106,6 @@ export default function SettingsProvider({ children }: { children: ReactNode }) 
     setSettings((s) => ({ ...s, nickname: nickname.trim().slice(0, 20) }));
   }, []);
 
-  const setExamDate = useCallback((examDate: string) => {
-    setSettings((s) => ({ ...s, examDate }));
-  }, []);
-
-  const setPlanIntensity = useCallback((planIntensity: PlanIntensity) => {
-    setSettings((s) => ({ ...s, planIntensity }));
-  }, []);
-
   const setWallpaper = useCallback((wallpaper: WallpaperId) => {
     setSettings((s) => ({ ...s, wallpaper }));
   }, []);
@@ -155,8 +146,6 @@ export default function SettingsProvider({ children }: { children: ReactNode }) 
       setMemoryMode,
       setAccent,
       setNickname,
-      setExamDate,
-      setPlanIntensity,
       setWallpaper,
       setTheme,
       setAvatar,
@@ -173,8 +162,6 @@ export default function SettingsProvider({ children }: { children: ReactNode }) 
       setMemoryMode,
       setAccent,
       setNickname,
-      setExamDate,
-      setPlanIntensity,
       setWallpaper,
       setTheme,
       setAvatar,

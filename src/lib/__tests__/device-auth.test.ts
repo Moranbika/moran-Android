@@ -27,7 +27,7 @@ describe('设备授权', () => {
       machineGuid: 'MACHINE-GUID-001',
     });
     expect(first).toBe(second);
-    expect(first).toMatch(/^CET6-[A-F0-9]{32}$/);
+    expect(first).toMatch(/^MORAN-[A-F0-9]{32}$/);
     expect(first).not.toContain('BIOS-SERIAL-001');
   });
 
@@ -41,9 +41,9 @@ describe('设备授权', () => {
       status: 200,
       json: async () => ({ authorized: true }),
     }));
-    await expect(checkDeviceAuthorization('CET6-TEST', '0.2.9')).resolves.toMatchObject({
+    await expect(checkDeviceAuthorization('MORAN-TEST', '0.2.9')).resolves.toMatchObject({
       authorized: true,
-      deviceSn: 'CET6-TEST',
+      deviceSn: 'MORAN-TEST',
     });
     vi.unstubAllGlobals();
   });
@@ -54,13 +54,13 @@ describe('设备授权', () => {
       status: 403,
       json: async () => ({ authorized: false, msg: '未授权设备' }),
     }));
-    await expect(checkDeviceAuthorization('CET6-TEST', '0.2.9')).resolves.toMatchObject({
+    await expect(checkDeviceAuthorization('MORAN-TEST', '0.2.9')).resolves.toMatchObject({
       authorized: false,
       reason: '未授权设备',
     });
 
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
-    await expect(checkDeviceAuthorization('CET6-TEST', '0.2.9')).resolves.toMatchObject({
+    await expect(checkDeviceAuthorization('MORAN-TEST', '0.2.9')).resolves.toMatchObject({
       authorized: false,
       reason: '设备验证服务暂不可用，请联网后重试。',
     });

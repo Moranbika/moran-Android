@@ -98,7 +98,7 @@ export default function BooksPage() {
           <input
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder={t('搜索词书，如六级、初中、新概念')}
+            placeholder={t('搜索词书或阶段')}
             aria-label={t('搜索词书')}
             className="min-w-0 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
@@ -117,7 +117,7 @@ export default function BooksPage() {
         </div>
       </div>
 
-      <div className="apple-segmented stage-filter-row overflow-x-auto" role="tablist" aria-label={t('按考试阶段筛选词书')}>
+      <div className="apple-segmented stage-filter-row overflow-x-auto" role="tablist" aria-label={t('按学习阶段筛选词书')}>
         {stages.map((item) => (
           <button
             key={item}
@@ -221,7 +221,7 @@ export default function BooksPage() {
       </div>
 
       <p className="text-center text-xs text-muted-foreground">
-        {t('已内置可直接学习的词库：大学六级、初中英语各册、小学英语。点击词书可查看按单元划分的单词列表。')}
+        {t('当前内置 32 本词书。点击词书可查看按单元划分的单词列表。')}
       </p>
     </div>
   );

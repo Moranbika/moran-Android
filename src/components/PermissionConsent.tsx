@@ -44,7 +44,7 @@ export default function PermissionConsent() {
         key: 'network',
         icon: Wifi,
         title: t('网络访问'),
-        description: t('莫兰需要联网加载词书、听力、账号和云更新，无法离线使用。'),
+        description: t('莫兰需要联网加载词书、账号和云更新，无法离线使用。'),
         actionLabel: t('继续'),
         request: async () => 'accepted',
       },

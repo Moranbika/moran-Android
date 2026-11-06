@@ -114,8 +114,8 @@ export default function LoginPage() {
                 <p className="font-semibold">{t('《隐私政策》')}</p>
                 <p className="mt-1 text-muted-foreground">
                   {t(cloudAccountsEnabled
-                    ? '手机号、账号和学习进度会同步到莫兰云端；发音、听力和账号服务会产生必要网络请求。莫兰不将数据用于广告或出售。'
-                    : '手机号、学习进度和设置在设备本地保存。联网播放发音、听力及使用账号服务时会产生必要网络请求。莫兰不将数据用于广告或出售。')}
+                    ? '手机号、账号和学习进度会同步到莫兰云端；发音和账号服务会产生必要网络请求。莫兰不将数据用于广告或出售。'
+                    : '手机号、学习进度和设置在设备本地保存。联网播放发音及使用账号服务时会产生必要网络请求。莫兰不将数据用于广告或出售。')}
                 </p>
                 <Link to="/privacy" className="mt-1 inline-block text-primary underline underline-offset-4">
                   {t('阅读完整隐私政策')}
@@ -146,7 +146,7 @@ export default function LoginPage() {
             <GraduationCap className="h-7 w-7" />
           </span>
           <h1 className="screen-title mt-4">{loggedIn ? t('管理账号') : t('莫兰')}</h1>
-          <p className="screen-lead mx-auto mt-2">{loggedIn ? t('当前账号与设备登录状态') : t('登录后开始记录你的六级学习进度')}</p>
+          <p className="screen-lead mx-auto mt-2">{loggedIn ? t('当前账号与设备登录状态') : t('登录后开始记录你的学习进度')}</p>
         </div>
 
         <Card className="app-glass app-glass-strong rounded-[28px] border-white/70 shadow-none">

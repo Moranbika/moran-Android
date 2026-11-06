@@ -126,7 +126,7 @@ export default function UpdatesPage() {
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
               {remoteEnabled
                 ? t('下拉刷新会立即检查；App 在前台时每分钟自动检查一次，重新进入应用也会立即检查。')
-                : t('莫兰需要联网获取词书、听力、账号和云更新，请检查构建配置或网络。')}
+                : t('莫兰需要联网获取词书、账号和云更新，请检查构建配置或网络。')}
             </p>
           </div>
         </div>
@@ -150,7 +150,7 @@ export default function UpdatesPage() {
         <h2 className="text-base font-semibold">{t('测试更新流程')}</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {[
-            ['1', t('在后台修改词书、单词、听力或真题')],
+            ['1', t('在后台修改词书和单词')],
             ['2', t('保存草稿，在发布页填写说明并发布')],
             ['3', t('测试设备保持联网，下拉刷新即可立即切换新内容')],
           ].map(([step, text]) => (
@@ -164,7 +164,7 @@ export default function UpdatesPage() {
         </div>
         <p className="mt-4 flex items-start gap-2 text-xs leading-5 text-muted-foreground">
           <Database className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          {t('内容更新覆盖词书、单词、听力和真题；界面或功能代码改动仍需要发布新的 App 版本。')}
+          {t('内容更新覆盖词书和单词；界面或功能代码改动仍需要发布新的 App 版本。')}
         </p>
       </section>
     </div>

@@ -30,11 +30,8 @@ export default function StudyReminder() {
   const activity = progress.dailyActivity[today] ?? {
     newWords: 0,
     reviews: 0,
-    listening: 0,
-    questions: 0,
   };
-  const studied = activity.newWords + activity.reviews + activity.listening + activity.questions > 0;
-  const hasPlan = Boolean(settings.examDate);
+  const studied = activity.newWords + activity.reviews > 0;
 
   useEffect(() => {
     const handler = () => setConsentTick((value) => value + 1);
@@ -43,7 +40,7 @@ export default function StudyReminder() {
   }, []);
 
   useEffect(() => {
-    if (!settings.loggedIn || !hasPlan || !calendarPermissionGranted()) return;
+    if (!settings.loggedIn || !calendarPermissionGranted()) return;
     const key = `cet6-practice:calendar-reminder:${today}`;
     let existing: string | null = null;
     try {
@@ -81,10 +78,10 @@ export default function StudyReminder() {
         // Ignore storage failures.
       }
     });
-  }, [consentTick, hasPlan, settings.loggedIn, studied, t, today]);
+  }, [consentTick, settings.loggedIn, studied, t, today]);
 
   useEffect(() => {
-    if (!settings.loggedIn || !hasPlan || studied || pathname !== '/') {
+    if (!settings.loggedIn || studied || pathname !== '/') {
       setOpen(false);
       return;
     }
@@ -119,7 +116,7 @@ export default function StudyReminder() {
     check();
     const timer = window.setInterval(check, 60_000);
     return () => window.clearInterval(timer);
-  }, [hasPlan, pathname, settings.loggedIn, studied, today]);
+  }, [pathname, settings.loggedIn, studied, today]);
 
   if (!open) return null;
 

@@ -7,8 +7,7 @@ function CountsProbe() {
   const { content, version, source } = useContent();
   return (
     <span>
-      {content.books.length}:{content.coreWords.length}:{content.listeningSets.length}:
-      {content.examSets.length}:{version}:{source}
+      {content.books.length}:{content.coreWords.length}:{version}:{source}
     </span>
   );
 }
@@ -20,12 +19,13 @@ describe('content runtime', () => {
         <CountsProbe />
       </ContentProvider>,
     );
-    expect(html).toContain('32:150:3:2:0:bundled');
+    expect(html).toContain('32:150:0:bundled');
   });
 
   it('rejects malformed remote content', () => {
     expect(isContentBundle(null)).toBe(false);
-    expect(isContentBundle({ schemaVersion: 1, books: [] })).toBe(false);
+    expect(isContentBundle({ schemaVersion: 4, books: [], coreWords: [] })).toBe(true);
+    expect(isContentBundle({ schemaVersion: 3, books: [], coreWords: [] })).toBe(false);
   });
 });
 

@@ -17,7 +17,7 @@ export async function buildMobileDeviceCode(identifier: string): Promise<string 
   const hex = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0'))
     .join('')
     .toUpperCase();
-  return `CET6-${hex.slice(0, 32)}`;
+  return `MORAN-${hex.slice(0, 32)}`;
 }
 
 export async function checkMobileDeviceAuthorization(

@@ -1,16 +1,11 @@
-// EXPORTS: HomePage
-// 首页：清晨薄雾中的个人学习工作台。
-
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   BookOpen,
   CalendarDays,
-  CheckCircle2,
   Flame,
-  Headphones,
-  PenLine,
+  Heart,
   Sparkles,
 } from 'lucide-react';
 import { useProgress } from '@/context/progress-context';
@@ -18,9 +13,9 @@ import { useSettings } from '@/context/settings-context';
 import { useI18n } from '@/context/i18n-context';
 import { useContent } from '@/context/content-context';
 import { bookWords } from '@/data/books';
+import { homeGreetingKey } from '@/lib/home-greeting';
 import { summarizeMemory } from '@/lib/memory';
 import { predictDueNextDays } from '@/lib/srs/predict';
-import { daysUntilExam } from '@/lib/study-plan';
 import { cn } from '@/lib/utils';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import { useInView } from '@/hooks/use-in-view';
@@ -56,14 +51,7 @@ function ProgressRing({
       aria-label={label}
       className="shrink-0 -rotate-90"
     >
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        fill="none"
-        stroke="var(--border)"
-        strokeWidth={stroke}
-      />
+      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--border)" strokeWidth={stroke} />
       <circle
         cx={size / 2}
         cy={size / 2}
@@ -112,13 +100,8 @@ function ForecastChart({ data }: { data: ForecastDay[] }) {
             </span>
             <div className="flex h-24 w-full items-end">
               <div
-                className={cn(
-                  'w-full rounded-t-[4px]',
-                  index === 0 ? 'bg-primary' : 'bg-primary/38',
-                )}
-                style={{
-                  height: `${height * progress}%`,
-                }}
+                className={cn('w-full rounded-t-[4px]', index === 0 ? 'bg-primary' : 'bg-primary/38')}
+                style={{ height: `${height * progress}%` }}
               />
             </div>
             <span className={cn('text-xs tabular-nums', index === 0 ? 'text-foreground' : 'text-foreground/55')}>
@@ -127,47 +110,6 @@ function ForecastChart({ data }: { data: ForecastDay[] }) {
           </div>
         );
       })}
-    </div>
-  );
-}
-
-function AccuracyChart({ correct, wrong }: { correct: number; wrong: number }) {
-  const { t } = useI18n();
-  const total = correct + wrong;
-  const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
-
-  return (
-    <div className="flex flex-col items-center gap-5 sm:flex-row">
-      <div className="relative">
-        <ProgressRing value={accuracy} size={176} label={t('练习正确率 {n}%', { n: accuracy })} />
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <strong className="text-[36px] font-normal tabular-nums tracking-[-0.04em]">{accuracy}%</strong>
-          <span className="text-xs text-foreground/58">{t('正确率')}</span>
-        </div>
-      </div>
-
-      <div className="w-full space-y-3">
-        <div className="flex items-center justify-between gap-4 text-sm">
-          <span className="flex items-center gap-2 text-foreground/66">
-            <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-            {t('答对')}
-          </span>
-          <strong className="font-normal tabular-nums">{correct}</strong>
-        </div>
-        <div className="flex items-center justify-between gap-4 text-sm">
-          <span className="flex items-center gap-2 text-foreground/66">
-            <span className="h-2.5 w-2.5 rounded-full bg-destructive" />
-            {t('答错')}
-          </span>
-          <strong className="font-normal tabular-nums">{wrong}</strong>
-        </div>
-        <div className="h-px bg-foreground/8" />
-        <p className="text-sm leading-6 text-foreground/58">
-          {total > 0
-            ? t('已作答 {n} 次，继续保持稳定的答题节奏。', { n: total })
-            : t('完成第一组练习后，这里会显示真实正确率。')}
-        </p>
-      </div>
     </div>
   );
 }
@@ -182,108 +124,57 @@ export default function HomePage() {
     () => selectedBook?.builtin && selectedBook.units?.length ? bookWords(selectedBook) : content.coreWords,
     [content.coreWords, selectedBook],
   );
-
   const memorySummary = useMemo(
     () => summarizeMemory(progress.memory, currentWords.map((word) => word.id)),
     [progress.memory, currentWords],
   );
   const forecast = useMemo(() => predictDueNextDays(progress.memory, 7), [progress.memory]);
-
-  let correct = 0;
-  let wrong = 0;
-  Object.values(progress.questionResults).forEach((result) => {
-    if (result) correct += 1;
-    else wrong += 1;
-  });
-  Object.values(progress.wordStats).forEach((stats) => {
-    correct += stats.correct;
-    wrong += stats.wrong;
-  });
-
   const totalWords = currentWords.length;
   const mastered = memorySummary.masteredCount;
   const mastery = totalWords > 0 ? Math.round((mastered / totalWords) * 100) : 0;
-  const answerTotal = correct + wrong;
-  const accuracy = answerTotal > 0 ? Math.round((correct / answerTotal) * 100) : 0;
-  const examDays = daysUntilExam(settings.examDate);
   const wordStudyRoute = memorySummary.dueToday > 0 ? '/vocab?mode=review' : '/vocab?mode=new';
-  const listeningPercent = content.listeningSets.length > 0
-    ? Math.round((progress.listeningDone.length / content.listeningSets.length) * 100)
-    : 0;
   const dateLabel = new Intl.DateTimeFormat(locale, {
     month: 'long',
     day: 'numeric',
     weekday: 'long',
   }).format(new Date());
+  const greeting = homeGreetingKey(new Date().getHours());
   const weekRows = useMemo(() => {
     const dayLabel = new Intl.DateTimeFormat(locale, { month: 'numeric', day: 'numeric' });
     return Array.from({ length: 7 }, (_, index) => {
       const date = new Date();
       date.setDate(date.getDate() - (6 - index));
       const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-      const activity = progress.dailyActivity[key] ?? {
-        newWords: 0,
-        reviews: 0,
-        listening: 0,
-        questions: 0,
-      };
+      const activity = progress.dailyActivity[key] ?? { newWords: 0, reviews: 0 };
       return {
         key,
         label: dayLabel.format(date),
         isToday: index === 6,
         ...activity,
-        total: activity.newWords + activity.reviews + activity.listening + activity.questions,
+        total: activity.newWords + activity.reviews,
       };
     });
   }, [locale, progress.dailyActivity]);
   const weekMax = Math.max(1, ...weekRows.map((day) => day.total));
   const weekTotal = weekRows.reduce((sum, day) => sum + day.total, 0);
 
-  const tracks = [
-    {
-      icon: BookOpen,
-      title: '词汇复习',
-      detail: memorySummary.dueToday > 0
-        ? t('{n} 个词已经到期', { n: memorySummary.dueToday })
-        : t('从「{name}」继续', { name: selectedBook?.name ?? t('当前词书') }),
-      value: mastery,
-      valueLabel: t('词汇掌握 {n}%', { n: mastery }),
-    },
-    {
-      icon: Headphones,
-      title: '听力真题',
-      detail: t('已完成 {done} / {total} 套', { done: progress.listeningDone.length, total: content.listeningSets.length }),
-      value: listeningPercent,
-      valueLabel: t('听力完成 {n}%', { n: listeningPercent }),
-    },
-    {
-      icon: PenLine,
-      title: '题型训练',
-      detail: answerTotal > 0 ? t('最近累计作答 {n} 次', { n: answerTotal }) : t('从阅读、翻译和写作开始'),
-      value: accuracy,
-      valueLabel: t('练习正确率 {n}%', { n: accuracy }),
-    },
-  ];
-
   return (
     <div className="mx-auto w-full max-w-[1180px] pb-8 pt-4 md:pt-10">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
           <h1 className="font-display text-[27px] leading-[1.18] tracking-[-0.035em] text-foreground md:text-[32px]">
-            {t('把今天的学习，留给清晨。')}
+            {t(greeting)}
           </h1>
           <p className="mt-3 max-w-xl text-[15px] leading-7 text-foreground/62 md:text-base">
-            {dateLabel} · {t('六级词汇、听力与真题练习，都从这一页继续。')}
+            {dateLabel} · {t('今天也从一个词开始，把记忆慢慢积累起来。')}
           </p>
         </div>
-
         <div className="app-glass app-glass-soft flex w-fit items-center gap-3 rounded-full px-4 py-2.5">
           <Flame className="h-4 w-4 text-primary" />
           <div className="pr-1">
             <p className="text-sm font-medium tabular-nums">{t('连续 {n} 天', { n: streakCount })}</p>
             <p className="text-xs text-foreground/55">
               {todayCheckedIn ? t('今天已完成打卡') : t('今天还差一次学习')}
-              {examDays !== null ? ` · D-${examDays}` : ''}
             </p>
           </div>
         </div>
@@ -307,7 +198,7 @@ export default function HomePage() {
 
           <div className="mt-5 grid items-center gap-5 sm:grid-cols-[1fr_auto] sm:gap-7 lg:mt-8">
             <div>
-              <p className="text-sm text-foreground/58">{selectedBook ? t(selectedBook.name) : t('六级核心词汇')}</p>
+              <p className="text-sm text-foreground/58">{selectedBook?.name ?? t('英语核心词汇')}</p>
               <div className="mt-2 flex items-end gap-3">
                 <strong className="text-[40px] font-normal leading-none tracking-[-0.05em] tabular-nums">
                   <AnimatedNumber value={memorySummary.dueToday} />
@@ -317,9 +208,8 @@ export default function HomePage() {
               <p className="mt-4 max-w-lg text-[15px] leading-7 text-foreground/62">
                 {memorySummary.dueToday > 0
                   ? t('先从到期词开始，完成这一轮后再学习新词。')
-                  : t('今天没有逾期复习。先完成 {n} 个新词，给记忆曲线一个新的起点。', { n: settings.dailyTarget })}
+                  : t('今天没有到期复习。先完成 {n} 个新词，给记忆曲线一个新的起点。', { n: settings.dailyTarget })}
               </p>
-
               <div className="mt-3 flex flex-wrap gap-3 lg:mt-6">
                 <Link
                   to={wordStudyRoute}
@@ -330,7 +220,6 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-
             <div className="relative mx-auto">
               <ProgressRing value={mastery} size={120} label={t('词汇掌握进度 {n}%', { n: mastery })} />
               <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -373,48 +262,27 @@ export default function HomePage() {
             {t('今天完成后，未来几天的复习压力会更均匀。')}
           </p>
         </article>
+
         <article className="app-glass h-full rounded-[28px] p-5 md:p-6">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-base font-medium">{t('学习状态')}</h2>
-              <p className="mt-1 text-sm text-foreground/55">{t('今日各学习轨进度概览')}</p>
-            </div>
-            <span className="hidden text-xs text-foreground/50 sm:block">{t('实时进度')}</span>
-          </div>
-
+          <h2 className="text-base font-medium">{t('学习状态')}</h2>
+          <p className="mt-1 text-sm text-foreground/55">{t('今天的词汇学习概览')}</p>
           <div className="mt-5 space-y-2">
-            {tracks.map((track) => {
-              const Icon = track.icon;
-              return (
-                <div
-                  key={track.title}
-                  className="flex min-h-[76px] items-center gap-4 rounded-[20px] bg-white/26 px-4 py-3"
-                >
-                  <Icon className="h-5 w-5 shrink-0 text-foreground/62" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-medium">{t(track.title)}</span>
-                    <span className="mt-1 block truncate text-xs text-foreground/55">{track.detail}</span>
-                  </span>
-                  <span className="relative hidden h-10 w-10 shrink-0 items-center justify-center sm:flex" aria-hidden="true">
-                    <ProgressRing value={track.value} size={40} compact label={track.valueLabel} />
-                    <span className="absolute text-[11px] tabular-nums text-foreground/62">{track.value}</span>
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </article>
-
-        <article className="app-glass h-full rounded-[28px] p-6">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-base font-medium">{t('练习表现')}</h2>
-              <p className="mt-1 text-sm text-foreground/55">{t('所有题型累计')}</p>
+            <div className="flex min-h-[76px] items-center gap-4 rounded-[20px] bg-white/26 px-4 py-3">
+              <BookOpen className="h-5 w-5 shrink-0 text-foreground/62" />
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-medium">{t('正在学习')}</span>
+                <span className="mt-1 block truncate text-xs text-foreground/55">{selectedBook?.name ?? t('英语核心词汇')}</span>
+              </span>
+              <span className="text-sm tabular-nums text-primary">{mastery}%</span>
             </div>
-            <CheckCircle2 className="h-5 w-5 text-primary" />
-          </div>
-          <div className="mt-6">
-            <AccuracyChart correct={correct} wrong={wrong} />
+            <div className="flex min-h-[76px] items-center gap-4 rounded-[20px] bg-white/26 px-4 py-3">
+              <Heart className="h-5 w-5 shrink-0 text-foreground/62" />
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-medium">{t('收藏的难词')}</span>
+                <span className="mt-1 block text-xs text-foreground/55">{t('集中复习还没有把握的词')}</span>
+              </span>
+              <span className="text-sm tabular-nums">{progress.favoriteWords.length}</span>
+            </div>
           </div>
         </article>
       </section>
@@ -423,21 +291,19 @@ export default function HomePage() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-base font-medium">{t('近 7 天学习明细')}</h2>
-            <p className="mt-1 text-sm text-foreground/55">{t('新词、复习、听力与题量的每日分布')}</p>
+            <p className="mt-1 text-sm text-foreground/55">{t('新词与复习的每日分布')}</p>
           </div>
           <span className="rounded-full bg-white/38 px-3 py-1 text-xs tabular-nums text-foreground/62">
             {t('本周合计 {n} 项', { n: weekTotal })}
           </span>
         </div>
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[640px] border-separate border-spacing-y-1 text-left text-sm">
+          <table className="w-full min-w-[520px] border-separate border-spacing-y-1 text-left text-sm">
             <thead>
               <tr className="text-xs text-foreground/48">
                 <th className="px-3 py-2 font-medium">{t('日期')}</th>
                 <th className="px-3 py-2 text-right font-medium">{t('新词')}</th>
                 <th className="px-3 py-2 text-right font-medium">{t('复习')}</th>
-                <th className="px-3 py-2 text-right font-medium">{t('听力')}</th>
-                <th className="px-3 py-2 text-right font-medium">{t('题量')}</th>
                 <th className="px-3 py-2 font-medium">{t('学习量')}</th>
               </tr>
             </thead>
@@ -450,8 +316,6 @@ export default function HomePage() {
                   </td>
                   <td className="px-3 py-2.5 text-right tabular-nums">{day.newWords}</td>
                   <td className="px-3 py-2.5 text-right tabular-nums">{day.reviews}</td>
-                  <td className="px-3 py-2.5 text-right tabular-nums">{day.listening}</td>
-                  <td className="px-3 py-2.5 text-right tabular-nums">{day.questions}</td>
                   <td className="px-3 py-2.5">
                     <div className="flex items-center gap-2">
                       <div className="h-1.5 min-w-24 flex-1 overflow-hidden rounded-full bg-foreground/8">

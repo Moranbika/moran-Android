@@ -1,7 +1,7 @@
 {
   "name": "miaoda-react-standard-webapp-app",
   "version": "0.2.9",
-  "description": "莫兰英语六级学习应用",
+  "description": "莫兰英语词汇学习应用",
   "author": "莫兰应用开发者",
   "private": true,
   "type": "module",
@@ -22,6 +22,8 @@
     "ios:install": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-ios.ps1",
     "ios:install:ipad": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-ios.ps1 -TargetKind iPad",
     "ios:close": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/close-ios-app.ps1",
+    "ios:admin:build": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-admin-ios-ipa.ps1",
+    "ios:admin:install": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-ios.ps1 -IpaPath release/platforms/ios/MoranAdmin-unsigned.ipa -TargetKind iPad",
     "electron:build": "vite build --config vite.electron.config.ts",
     "electron:dist": "electron-builder --win nsis",
     "content:export": "node scripts/export-content.mjs",
@@ -147,7 +149,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "artifactName": "英语六级备考-Setup-${version}.exe"
+      "artifactName": "莫兰-Setup-${version}.exe"
     }
   }
 }

@@ -9,7 +9,7 @@ const outputDir = path.resolve(
   'platforms',
   'harmony',
   'screenshots',
-  'tablet-audit-20261102',
+  'store-2026-11-04-vocabulary-tablet',
 );
 const port = 65086;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -87,7 +87,7 @@ app.whenReady().then(async () => {
     for (const [route, fileName] of [
       ['/', 'tablet-01-home.png'],
       ['/vocab', 'tablet-02-vocab.png'],
-      ['/practice', 'tablet-03-practice.png'],
+      ['/progress', 'tablet-03-progress.png'],
     ]) {
       await win.loadURL(`http://127.0.0.1:${port}${route}`);
       await sleep(4500);

@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   BookOpen,
-  CalendarDays,
   Camera,
   Check,
   Clock3,
@@ -21,7 +20,6 @@ import {
 import { toast } from 'sonner';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import DatePopover from '@/components/DatePopover';
 import { useSettings } from '@/context/settings-context';
 import { useI18n } from '@/context/i18n-context';
 import { useProgress } from '@/context/progress-context';
@@ -33,7 +31,6 @@ import { cloudAccountsEnabled } from '@/lib/cloud-sync';
 import { fetchQuota, type UserQuota } from '@/lib/payment-api';
 import { paymentsEnabled } from '@/lib/feature-flags';
 import { PERMISSION_OPEN_EVENT } from '@/lib/permission-consent';
-import { daysUntilExam, type PlanIntensity } from '@/lib/study-plan';
 import { cn } from '@/lib/utils';
 
 const MODES = [
@@ -43,12 +40,6 @@ const MODES = [
 ];
 
 const CONTACT_EMAIL = '2218145697@qq.com';
-
-const PLAN_MODES: Array<{ value: PlanIntensity; label: string; desc: string }> = [
-  { value: 'light', label: '轻量', desc: '较少新词，保留听力与基础练习' },
-  { value: 'standard', label: '标准', desc: '按每日词量完成四项学习' },
-  { value: 'sprint', label: '冲刺', desc: '增加听力套数和题型训练' },
-];
 
 // 当日学习量达到该值即视为"过多"，需二次确认
 const OVERLOAD_THRESHOLD = 30;
@@ -61,8 +52,6 @@ export default function SettingsPage() {
     setMemoryMode,
     setAccent,
     setNickname,
-    setExamDate,
-    setPlanIntensity,
     setWallpaper,
     setTheme,
     setAvatar,
@@ -126,7 +115,6 @@ export default function SettingsPage() {
       window.removeEventListener('moran:quota-changed', loadQuota);
     };
   }, [cloudSession]);
-  const examDays = daysUntilExam(settings.examDate);
   const avatar = AVATARS.find((item) => item.id === settings.avatar) ?? AVATARS[0];
   const accountLabel = maskAccountId(settings.accountId) || t(cloudAccountsEnabled ? '云端账号' : '本机账号');
   const displayName = settings.nickname || (settings.loggedIn ? t('莫兰学习者') : t('访客'));
@@ -592,49 +580,6 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* 备考计划 */}
-      <Card className="order-3">
-        <CardContent className="space-y-4 p-5">
-          <div className="flex items-center gap-2 text-base font-semibold">
-            <CalendarDays className="h-4 w-4 text-primary" /> {t('备考计划')}
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <DatePopover
-              value={settings.examDate}
-              onChange={setExamDate}
-              placeholder={t('选择考试日期')}
-              ariaLabel={t('考试日期')}
-              className="w-full sm:w-[240px]"
-            />
-            <span className="text-sm text-muted-foreground">
-              {examDays === null
-                ? t('设置日期后显示倒计时')
-                : examDays === 0
-                  ? t('今天考试')
-                  : t('距离考试 {n} 天', { n: examDays })}
-            </span>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-3">
-            {PLAN_MODES.map((mode) => (
-              <button
-                key={mode.value}
-                type="button"
-                onClick={() => setPlanIntensity(mode.value)}
-                className={
-                  'rounded-xl border p-3 text-left transition-colors ' +
-                  (settings.planIntensity === mode.value
-                    ? 'border-primary bg-primary/6'
-                    : 'border-border hover:border-primary/40')
-                }
-              >
-                <span className="block text-sm font-semibold">{t(mode.label)}</span>
-                <span className="mt-1 block text-xs leading-5 text-muted-foreground">{t(mode.desc)}</span>
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* 记忆模式 */}
       <Card className="order-4">
         <CardContent className="space-y-3 p-5">
@@ -811,7 +756,7 @@ export default function SettingsPage() {
       </Card>
 
       <footer className="order-last mt-2 rounded-[22px] border border-border/65 bg-card/55 px-5 py-5 text-center">
-        <p className="text-sm font-semibold text-foreground">{t('莫兰 · 英语六级学习')}</p>
+        <p className="text-sm font-semibold text-foreground">{t('莫兰 · 英语词汇学习')}</p>
         <p className="mt-1 text-[11px] text-muted-foreground">{t('版本')} 0.2.9</p>
         <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
           <Link to="/privacy" className="inline-flex min-h-11 items-center text-primary underline underline-offset-4">

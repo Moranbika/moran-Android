@@ -11,21 +11,17 @@ const vite = await createServer({
 });
 
 try {
-  const [books, words, listening, practice] = await Promise.all([
+  const [books, words] = await Promise.all([
     vite.ssrLoadModule('/src/data/books.ts'),
     vite.ssrLoadModule('/src/data/words.ts'),
-    vite.ssrLoadModule('/src/data/listening.ts'),
-    vite.ssrLoadModule('/src/data/practice.ts'),
   ]);
   const content = {
-    schemaVersion: 1,
+    schemaVersion: 4,
     books: books.VOCAB_BOOKS.map((book) => ({
       ...book,
       units: book.units ?? [],
     })),
     coreWords: words.VOCAB_WORDS,
-    listeningSets: listening.LISTENING_SETS,
-    examSets: practice.EXAM_SETS,
   };
   const json = `${JSON.stringify(content, null, 2)}\n`;
   mkdirSync(path.join(root, 'server'), { recursive: true });

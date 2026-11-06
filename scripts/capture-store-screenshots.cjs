@@ -13,7 +13,7 @@ const outputRoot = path.resolve(
   'platforms',
   'harmony',
   'screenshots',
-  'store-2026-11-02-upload',
+  'store-2026-11-04-vocabulary',
 );
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -177,7 +177,7 @@ const profiles = [
 const routes = [
   ['/', '01-home'],
   ['/vocab', '02-vocab'],
-  ['/practice', '03-practice'],
+  ['/progress', '03-progress'],
 ];
 
 app.whenReady().then(async () => {

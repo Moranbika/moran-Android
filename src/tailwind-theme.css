@@ -927,7 +927,7 @@
     opacity: 0 !important;
     transform: translateY(-28px) !important;
   }
-  @media (max-width: 1023px) {
+  @media (max-width: 1023px), (pointer: coarse) {
     body {
       background-attachment: scroll;
       overscroll-behavior-y: none;

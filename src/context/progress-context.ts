@@ -35,7 +35,7 @@ export interface IProgress {
   favoriteWords: string[]; // 收藏单词 id
   wordStats: Record<string, { correct: number; wrong: number }>; // 单词测验对错统计
   memory: Record<string, WordMemory>; // 每个词的艾宾浩斯记忆状态
-  listeningDone: string[]; // 已完成的听力材料 id
+  listeningDone: string[]; // 旧版字段，仅用于兼容已有本地数据
   questionResults: Record<string, boolean>; // 题目(qid)对错
   streakDates: string[]; // 打卡日期（yyyy-MM-dd，去重）
   reviewLog: ReviewLog[]; // 每次复习的评价记录（用于每日统计与持久度）
