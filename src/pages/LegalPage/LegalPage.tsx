@@ -5,8 +5,8 @@ import { cloudAccountsEnabled } from '@/lib/cloud-sync';
 import { useI18n } from '@/context/i18n-context';
 
 const CONTACT_EMAIL = '2218145697@qq.com';
-const UPDATED_AT = '2026 年 11 月 2 日';
-const UPDATED_AT_EN = 'November 2, 2026';
+const UPDATED_AT = '2026 年 11 月 11 日';
+const UPDATED_AT_EN = 'November 11, 2026';
 
 interface Section {
   title: string;
@@ -141,6 +141,18 @@ const PRIVACY_SECTIONS: Section[] = [
     ],
   },
   {
+    title: '华为应用内购买与订单数据',
+    paragraphs: [
+      cloudAccountsEnabled
+        ? '莫兰的会员额度通过华为应用内购买（IAP）提供。购买时，华为负责处理支付、扣款、收据和退款；莫兰不会接触你的银行卡号、支付密码或华为账号密码。'
+        : '当前构建未启用华为应用内购买。',
+      cloudAccountsEnabled
+        ? '购买完成后，莫兰会收到华为签发的商品 ID、订单号、购买凭证（purchaseData/JWS）、支付状态和金额，用于核验订单、开通额度、防止重复入账、对账、退款和客服处理。上述交易记录保存在莫兰服务器，并在法律或财务要求期限内保留。'
+        : '如未来启用华为 IAP，莫兰会在启用前更新本政策、应用内说明和商店介绍。',
+      '价格、币种和可购买商品以华为收银台展示及 AGC 商品配置为准。虚拟额度不可提现、转让或兑换现金。',
+    ],
+  },
+  {
     title: '数据用途与保存位置',
     paragraphs: [
       '莫兰使用上述数据提供学习功能、保存进度、恢复登录状态、排查故障、保障服务安全和履行法律义务，不将数据用于个性化广告或出售。',
@@ -154,6 +166,7 @@ const PRIVACY_SECTIONS: Section[] = [
     paragraphs: [
       '单词发音在联网时可能请求有道词典的公开发音服务。请求时，对方可能收到访问所必需的 IP 地址、设备或浏览器技术信息，并按其自身隐私政策处理数据。',
       '内容更新由 moranenglish.cn 提供。应用只发送内容版本号和防缓存参数，不发送手机号、账号或学习进度；服务器可能收到访问所必需的 IP 地址和请求时间。',
+      '会员购买由华为应用市场与应用内购买服务处理。华为会按其隐私政策和数字商品规则处理支付、账号与交易信息；莫兰只接收完成订单核验和额度开通所必需的交易凭证。',
       cloudAccountsEnabled
         ? '账号找回通过电子邮件联系开发者完成。用户无需发送原密码，开发者核验注册手机号和最近登录平台后，可在后台设置临时密码。'
         : '本机账号无法远程找回密码。忘记密码时，可在系统设置中清除应用数据后重新注册；本机学习记录会一并删除。',
@@ -163,7 +176,7 @@ const PRIVACY_SECTIONS: Section[] = [
     title: '保存期限',
     paragraphs: [
       cloudAccountsEnabled
-        ? '本地数据保存在用户设备上，直至用户在设置中删除账号与数据、清除应用数据或卸载应用。云端账号在启用后保存至用户主动删除账号；为安全、审计或法律义务确需保留的最小日志，将在法定期限届满后删除或匿名化。'
+        ? '本地数据保存在用户设备上，直至用户在设置中删除账号与数据、清除应用数据或卸载应用。云端账号在启用后保存至用户主动删除账号；为安全、审计或法律义务确需保留的最小日志，将在法定期限届满后删除或匿名化。订单和交易记录按法律、财务和对账要求保留。'
         : '账号与学习数据保存在当前设备，直至用户在设置中删除账号与数据、清除应用数据或卸载应用。公开商店版本不使用云端账号，因此服务器不保存账号数据。',
     ],
   },
@@ -216,6 +229,15 @@ const TERMS_SECTIONS: Section[] = [
       '用户应提供本人有权使用的手机号，并妥善保管密码和设备。',
       '不得利用莫兰攻击服务、绕过访问控制、批量抓取内容、干扰其他用户或从事违法活动。',
       '发现账号异常时，应及时修改密码、退出登录或联系开发者。',
+    ],
+  },
+  {
+    title: '付费服务与虚拟商品',
+    paragraphs: [
+      '莫兰可能通过华为应用内购买提供会员额度或其他数字内容。购买前，请在华为收银台核对商品、价格、数量和有效期。',
+      '支付、扣款、收据和退款由华为按平台规则处理。除法律或华为规则另有规定外，已消耗的虚拟额度不支持无理由退款。',
+      '会员额度仅用于莫兰内约定功能，不可提现、转让或兑换现金。因账号注销、违规封禁或服务终止导致权益无法继续使用时，按适用法律和华为规则处理。',
+      '未成年人购买前应取得监护人同意。',
     ],
   },
   {
@@ -296,6 +318,18 @@ const PRIVACY_SECTIONS_EN: Section[] = [
     ],
   },
   {
+    title: 'Huawei in-app purchases and order data',
+    paragraphs: [
+      cloudAccountsEnabled
+        ? 'Moran membership quota is offered through Huawei in-app purchases (IAP). Huawei processes payment, charges, receipts and refunds; Moran does not receive your bank card number, payment password or Huawei account password.'
+        : 'Huawei in-app purchases are not enabled in this build.',
+      cloudAccountsEnabled
+        ? 'After a purchase, Moran receives the Huawei-issued product ID, order ID, purchase proof (purchaseData/JWS), payment status and amount to verify the order, grant quota, prevent duplicate credit, reconcile accounts, handle refunds and provide support. These transaction records are stored on the Moran server and retained for the period required by law or financial rules.'
+        : 'If Huawei IAP is enabled in the future, Moran will update this policy, the in-app notice and the store listing before enabling it.',
+      'Prices, currencies and available products are governed by the Huawei checkout page and AGC product configuration. Virtual quota cannot be withdrawn, transferred or exchanged for cash.',
+    ],
+  },
+  {
     title: 'Purpose and storage location',
     paragraphs: [
       'Moran uses this data to provide learning features, save progress, restore sign-in state, diagnose faults, protect service security and meet legal obligations. It is not used for personalised advertising or sold.',
@@ -309,6 +343,7 @@ const PRIVACY_SECTIONS_EN: Section[] = [
     paragraphs: [
       'When online, word pronunciation may request Youdao Dictionary’s public pronunciation service. The provider may receive the IP address and device or browser information necessary to serve the request and process it under its own privacy policy.',
       'Content updates are provided by moranenglish.cn. The app sends only the content version and a cache-busting value, not your phone number, account or learning progress. The server may receive the IP address and request time necessary to serve the request.',
+      'Membership purchases are processed by Huawei AppGallery and Huawei in-app purchasing. Huawei processes payment, account and transaction information under its own privacy policy and digital-goods rules. Moran receives only the transaction proof needed to verify the order and grant quota.',
       cloudAccountsEnabled
         ? 'Password recovery is handled by email. You never need to send your current password. After verifying your registered phone number and recent platform, the developer can set a temporary password in the administration system.'
         : 'A local account cannot be recovered remotely. If you forget the password, clear app data in system settings and register again; local learning records will also be deleted.',
@@ -318,7 +353,7 @@ const PRIVACY_SECTIONS_EN: Section[] = [
     title: 'Retention',
     paragraphs: [
       cloudAccountsEnabled
-        ? 'Local data remains on your device until you delete the account and data, clear app data or uninstall the app. A cloud account remains until you delete it; minimal logs required for security, audit or legal obligations are deleted or anonymised after the statutory period.'
+        ? 'Local data remains on your device until you delete the account and data, clear app data or uninstall the app. A cloud account remains until you delete it; minimal logs required for security, audit or legal obligations are deleted or anonymised after the statutory period. Order and transaction records are retained as required for legal, accounting and reconciliation purposes.'
         : 'Account and learning data remain on this device until you delete the account and data, clear app data or uninstall the app. The public store build does not use cloud accounts, so the server stores no account data.',
     ],
   },
@@ -370,6 +405,15 @@ const TERMS_SECTIONS_EN: Section[] = [
       'Use a phone number you are entitled to use and protect your password and device.',
       'Do not attack the service, bypass access controls, scrape content in bulk, disrupt other users or engage in unlawful activity.',
       'If you notice unusual account activity, change your password, sign out or contact the developer promptly.',
+    ],
+  },
+  {
+    title: 'Paid services and virtual goods',
+    paragraphs: [
+      'Moran may offer membership quota or other digital content through Huawei in-app purchases. Before purchase, review the product, price, quantity and validity period on the Huawei checkout page.',
+      'Huawei processes payment, charges, receipts and refunds under its platform rules. Except where required by law or Huawei rules, consumed virtual quota is not eligible for a no-reason refund.',
+      'Membership quota may be used only for the features described by Moran and cannot be withdrawn, transferred or exchanged for cash. If account deletion, a lawful restriction or service termination prevents continued use, the remaining entitlement will be handled under applicable law and Huawei rules.',
+      'Minors must obtain guardian consent before making a purchase.',
     ],
   },
   {

@@ -3,20 +3,9 @@ const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
 
-app.commandLine.appendSwitch('no-proxy-server');
-app.commandLine.appendSwitch('force-device-scale-factor', '1');
-
-const root = path.resolve('dist/mobile');
-const port = 65090;
-const outputRoot = path.resolve(
-  'release',
-  'platforms',
-  'harmony',
-  'screenshots',
-  'store-2026-11-04-vocabulary',
-);
+const root = path.resolve('dist', 'mobile');
+const outputRoot = path.resolve('release', 'store-submission-20261111', 'screenshots');
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const mime = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -25,237 +14,139 @@ const mime = {
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
   '.ico': 'image/x-icon',
   '.mp3': 'audio/mpeg',
-  '.wav': 'audio/wav',
-  '.woff': 'font/woff',
-  '.woff2': 'font/woff2',
 };
 
-const server = http.createServer((request, response) => {
-  const requestPath = decodeURIComponent((request.url || '/').split('?')[0]);
-  console.log(`request ${requestPath}`);
-  const relative = requestPath === '/' ? 'index.html' : requestPath.replace(/^\/+/, '');
-  let filePath = path.join(root, relative);
-  if (!filePath.startsWith(root) || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-    filePath = path.join(root, 'index.html');
-  }
-  response.writeHead(200, {
-    'Content-Type': mime[path.extname(filePath).toLowerCase()] || 'application/octet-stream',
-    'Cache-Control': 'no-store',
-  });
-  response.end(fs.readFileSync(filePath));
-});
+let server;
 
-const now = Date.now();
-const day = 86400000;
-const dateKey = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const dateOfMonth = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${dateOfMonth}`;
-};
-
-const wordIds = Array.from({ length: 52 }, (_, index) => `w${index + 1}`);
-const streakDates = Array.from({ length: 10 }, (_, index) => (
-  dateKey(new Date(now - (9 - index) * day))
-));
-const memory = {};
-const wordStats = {};
-const reviewLog = [];
-
-wordIds.forEach((id, index) => {
-  const mastered = index < 34;
-  memory[id] = {
-    status: mastered ? 'mastered' : 'learning',
-    ease: mastered ? 2.6 : 1.8,
-    interval: mastered ? 30 : 1,
-    due: now + (index < 14 ? -(1 + (index % 3)) * 3600000 : (1 + (index % 10)) * day),
-    reps: mastered ? 4 : 2,
-    lapses: mastered ? 0 : 1,
-    lastRating: mastered ? 3 : 1,
-    learnedAt: now - (1 + (index % 18)) * day,
-  };
-  wordStats[id] = { correct: mastered ? 4 : 2, wrong: mastered ? 0 : 1 };
-  for (let review = 0; review < 3; review += 1) {
-    reviewLog.push({
-      wordId: id,
-      rating: review === 2 ? 1 : 2,
-      ts: now - (index % 14 + 1) * day + review * 7200000,
+async function startServer() {
+  server = http.createServer((request, response) => {
+    const pathname = decodeURIComponent((request.url || '/').split('?')[0]);
+    const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
+    let file = path.join(root, relative);
+    if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
+      file = path.join(root, 'index.html');
+    }
+    response.writeHead(200, {
+      'Content-Type': mime[path.extname(file).toLowerCase()] || 'application/octet-stream',
+      'Cache-Control': 'no-store',
     });
-  }
-});
-
-const studyLog = {};
-const dailyActivity = {};
-streakDates.forEach((date, index) => {
-  studyLog[date] = 1800 + ((index * 677) % 1800);
-  dailyActivity[date] = {
-    newWords: 6 + (index % 8),
-    reviews: 12 + (index % 11),
-    listening: index % 3,
-    questions: 18 + (index % 16),
-  };
-});
-
-const questionResults = {};
-for (let index = 0; index < 327; index += 1) {
-  questionResults[`sample-q-${index + 1}`] = index >= 52;
-}
-
-const settings = {
-  selectedBookId: 'cet6',
-  loginMethod: 'account',
-  loggedIn: true,
-  dailyTarget: 15,
-  memoryMode: 0,
-  accent: 'us',
-  nickname: '莫兰同学',
-  examDate: dateKey(new Date(now + 52 * day)),
-  planIntensity: 'standard',
-  theme: 'mist',
-  wallpaper: 'dawn',
-  avatar: 'leaf',
-  fontScale: 1,
-  glassOpacity: 52,
-  language: 'zh',
-};
-
-const progress = {
-  learnedWords: wordIds,
-  favoriteWords: ['w7', 'w16', 'w31'],
-  wordStats,
-  memory,
-  listeningDone: ['cet6-2025-12-1'],
-  questionResults,
-  streakDates,
-  reviewLog: reviewLog.sort((left, right) => left.ts - right.ts),
-  studyLog,
-  dailyActivity,
-  mockExamAttempts: [
-    {
-      id: 'store-screenshot-mock',
-      examSetId: 'cet6-2025-12-1',
-      completedAt: now - 2 * day,
-      durationSeconds: 7380,
-      listeningCorrect: 19,
-      listeningTotal: 25,
-      readingCorrect: 27,
-      readingTotal: 30,
-      answers: {},
-    },
-  ],
-};
-
-const seedStorage = `
-  localStorage.setItem('cet6-practice:settings', ${JSON.stringify(JSON.stringify(settings))});
-  localStorage.setItem('cet6-practice:progress', ${JSON.stringify(JSON.stringify(progress))});
-  localStorage.setItem('cet6-practice:privacy-consent', ${JSON.stringify(JSON.stringify({
-    version: '2026-11-02',
-    acceptedAt: now,
-  }))});
-  localStorage.setItem('cet6-practice:permission-consent-v2', ${JSON.stringify(JSON.stringify({
-    done: true,
-    results: {
-      network: 'accepted',
-      storage: 'accepted',
-      calendar: 'denied',
-      notifications: 'denied',
-    },
-  }))});
-`;
-
-const profiles = [
-  { folder: 'phone', width: 1080, height: 1920, prefix: 'phone', touch: true },
-  { folder: 'tablet', width: 1920, height: 1280, prefix: 'tablet', touch: true },
-  { folder: 'desktop', width: 1920, height: 1080, prefix: 'desktop', touch: false },
-].filter((profile) => (
-  !process.env.SCREENSHOT_PROFILE || profile.folder === process.env.SCREENSHOT_PROFILE
-));
-
-const routes = [
-  ['/', '01-home'],
-  ['/vocab', '02-vocab'],
-  ['/progress', '03-progress'],
-];
-
-app.whenReady().then(async () => {
-  fs.mkdirSync(outputRoot, { recursive: true });
+    response.end(fs.readFileSync(file));
+  });
   await new Promise((resolve, reject) => {
     server.once('error', reject);
-    server.listen(port, '127.0.0.1', resolve);
+    server.listen(65086, '127.0.0.1', resolve);
   });
+}
+
+async function captureSet(win, name, cssWidth, cssHeight, scale, outputWidth, outputHeight, routes) {
+  const outputDir = path.join(outputRoot, name);
+  fs.mkdirSync(outputDir, { recursive: true });
+  win.setContentSize(outputWidth, outputHeight);
+  await sleep(250);
+  win.webContents.setZoomFactor(outputWidth / cssWidth);
+  await sleep(400);
+  for (const [index, route] of routes.entries()) {
+    await win.loadURL(`http://127.0.0.1:65086${route}`);
+    await sleep(300);
+    const deadline = Date.now() + 9000;
+    while (Date.now() < deadline) {
+      const launching = await win.webContents.executeJavaScript(
+        'Boolean(document.querySelector(".moran-launch"))',
+        true,
+      );
+      if (!launching) break;
+      await sleep(120);
+    }
+    await sleep(900);
+    await win.webContents.executeJavaScript(
+      `document.documentElement.dataset.touch = 'true'`,
+      true,
+    );
+    await sleep(250);
+    const captured = await win.webContents.capturePage();
+    const image = captured.getSize().width === outputWidth && captured.getSize().height === outputHeight
+      ? captured
+      : captured.crop({ x: 0, y: 0, width: outputWidth, height: outputHeight });
+    const file = path.join(outputDir, `${name}-${String(index + 1).padStart(2, '0')}-${route.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'home'}.png`);
+    fs.writeFileSync(file, image.toPNG());
+    console.log(file);
+  }
+}
+
+app.disableHardwareAcceleration();
+
+app.whenReady().then(async () => {
+  if (!fs.existsSync(path.join(root, 'index.html'))) {
+    throw new Error(`Missing mobile build: ${root}`);
+  }
+  await startServer();
+  fs.mkdirSync(outputRoot, { recursive: true });
+  const win = new BrowserWindow({
+    width: 960,
+    height: 640,
+    useContentSize: true,
+    show: false,
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true,
+      offscreen: true,
+    },
+  });
+  win.webContents.setBackgroundThrottling(false);
+  const evaluate = (code) => win.webContents.executeJavaScript(code, true);
 
   try {
-    for (const profile of profiles) {
-      const folder = path.join(outputRoot, profile.folder);
-      fs.mkdirSync(folder, { recursive: true });
-
-      const win = new BrowserWindow({
-        width: profile.width,
-        height: profile.height,
-        useContentSize: true,
-        show: false,
-        webPreferences: {
-          contextIsolation: true,
-          nodeIntegration: false,
-          sandbox: false,
-          offscreen: false,
-        },
-      });
-      win.setContentSize(profile.width, profile.height, false);
-      win.webContents.setBackgroundThrottling(false);
-      win.webContents.setZoomFactor(1);
-      win.webContents.on('did-fail-load', (_event, code, description, url) => {
-        console.error(`load failed ${code} ${description} ${url}`);
-      });
-      win.webContents.on('console-message', (_event, level, message, line, sourceId) => {
-        console.log(`console ${level} ${message} ${sourceId}:${line}`);
-      });
-
-      await win.loadURL(`http://127.0.0.1:${port}/`);
-      await sleep(2600);
-      await win.webContents.executeJavaScript(seedStorage, true);
-      await win.loadURL(`http://127.0.0.1:${port}/`);
-      await sleep(3600);
-
-      for (const [route, suffix] of routes) {
-        await win.loadURL(`http://127.0.0.1:${port}/`);
-        await sleep(2000);
-        if (route !== '/') {
-          await win.webContents.executeJavaScript(
-            `history.pushState({}, '', ${JSON.stringify(route)}); window.dispatchEvent(new PopStateEvent('popstate'));`,
-            true,
-          );
+    await win.loadURL('http://127.0.0.1:65086/');
+    await sleep(500);
+    const today = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Shanghai',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date());
+    await evaluate(`(() => {
+      localStorage.setItem('cet6-practice:settings', JSON.stringify({
+        selectedBookId: 'core',
+        loginMethod: 'account',
+        loggedIn: true,
+        accountId: '13800138000',
+        dailyTarget: 15,
+        memoryMode: 0,
+        accent: 'us',
+        nickname: '莫兰学习者',
+        wallpaper: 'dawn',
+        theme: 'mist',
+        avatar: 'leaf',
+        fontScale: 1,
+        glassOpacity: 52,
+        language: 'zh'
+      }));
+      localStorage.setItem('cet6-practice:privacy-consent', JSON.stringify({
+        version: '2026-11-02',
+        acceptedAt: Date.now()
+      }));
+      localStorage.setItem('cet6-practice:permission-consent-v2', JSON.stringify({
+        done: true,
+        results: {
+          network: 'accepted',
+          storage: 'accepted',
+          notifications: 'denied',
+          calendar: 'denied'
         }
-        if (profile.touch) {
-          await win.webContents.executeJavaScript(
-            "document.documentElement.dataset.touch = 'true';",
-            true,
-          );
-        }
-        await sleep(3200);
-        const image = await win.webContents.capturePage({
-          x: 0,
-          y: 0,
-          width: profile.width,
-          height: profile.height,
-        });
-        fs.writeFileSync(
-          path.join(folder, `${profile.prefix}-${suffix}.png`),
-          image.toPNG(),
-        );
-      }
+      }));
+      localStorage.setItem('cet6-practice:study-reminder:${today}', String(Date.now() + 86400000));
+      document.documentElement.dataset.touch = 'true';
+    })()`);
 
-      win.destroy();
-    }
-
-    server.close();
-    app.quit();
-  } catch (error) {
-    console.error(error.stack || error.message);
-    server.close();
-    app.exit(1);
+    await captureSet(win, 'phone', 360, 640, 3, 1080, 1920, ['/', '/books', '/progress']);
+    await captureSet(win, 'tablet', 960, 640, 2, 1920, 1280, ['/', '/books', '/progress']);
+    console.log(`Store screenshots: ${outputRoot}`);
+  } finally {
+    server?.close();
+    win.destroy();
+    app.exit(0);
   }
 });
