@@ -27,7 +27,7 @@ export function RootApp() {
     </>
   );
 
-  return isHarmony || __MORAN_WEB_TEST__ ? (
+  return isHarmony || __MORAN_HASH_ROUTER__ ? (
     <HashRouter>{content}</HashRouter>
   ) : (
     <BrowserRouter basename={import.meta.env.MIAODA_CLIENT_BASE_PATH || '/'}>

@@ -71,6 +71,35 @@ export async function createPaymentOrder(planId: number): Promise<PaymentOrder> 
   return readJson<PaymentOrder>(response);
 }
 
+export interface IapRedeemResult {
+  ok: true;
+  orderNo: string;
+  status: string;
+  duplicated?: boolean;
+}
+
+export async function redeemIapPurchase(input: {
+  planId: number;
+  productId: string;
+  productType: string;
+  purchaseToken: string;
+  purchaseOrderId: string;
+  purchaseData: string;
+}): Promise<IapRedeemResult> {
+  const auth = token();
+  if (!API_BASE || !auth) throw new Error('请先登录云端账号');
+  const response = await fetch(`${API_BASE}/api/orders/iap`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth}`,
+    },
+    body: JSON.stringify(input),
+  });
+  return readJson<IapRedeemResult>(response);
+}
+
 export async function fetchPaymentOrder(orderNo: string) {
   const auth = token();
   if (!API_BASE || !auth) throw new Error('请先登录云端账号');

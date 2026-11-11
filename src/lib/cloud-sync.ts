@@ -3,6 +3,7 @@
 const API_BASE = __MORAN_API_BASE__;
 const CLOUD_ENABLED = Boolean(API_BASE);
 export const cloudAccountsEnabled = CLOUD_ENABLED;
+let authGeneration = 0;
 
 export interface CloudProgressSnapshot {
   data: unknown;
@@ -28,7 +29,25 @@ function notifyAuthChanged(): void {
 
 function clearInvalidSession(): void {
   localStorage.removeItem('moran_token');
+  authGeneration += 1;
   notifyAuthChanged();
+}
+
+export async function cloudLogout(): Promise<void> {
+  const token = localStorage.getItem('moran_token');
+  authGeneration += 1;
+  localStorage.removeItem('moran_token');
+  notifyAuthChanged();
+  if (!CLOUD_ENABLED || !token) return;
+  try {
+    await fetch(`${API_BASE}/api/logout`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(10000),
+    });
+  } catch {
+    // Local logout is complete even when the server cannot be reached.
+  }
 }
 
 async function currentDeviceSn(): Promise<string> {
@@ -44,13 +63,17 @@ async function currentDeviceSn(): Promise<string> {
 
 export async function cloudRegister(phone: string, password: string) {
   if (!CLOUD_ENABLED) return { ok: true, status: 0 };
+  const generation = authGeneration;
   try {
+    const deviceSn = await currentDeviceSn();
+    if (generation !== authGeneration) return { ok: false, status: 0, msg: '登录状态已变更，请重试' };
     const r = await fetch(`${API_BASE}/api/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: phone, password, deviceSn: await currentDeviceSn() }),
+      body: JSON.stringify({ username: phone, password, deviceSn }),
     });
     const j = await r.json();
+    if (generation !== authGeneration) return { ok: false, status: 0, msg: '登录状态已变更，请重试' };
     if (j.token) {
       localStorage.setItem('moran_token', j.token);
       notifyAuthChanged();
@@ -63,13 +86,17 @@ export async function cloudRegister(phone: string, password: string) {
 
 export async function cloudLogin(phone: string, password: string) {
   if (!CLOUD_ENABLED) return { ok: true, status: 0 };
+  const generation = authGeneration;
   try {
+    const deviceSn = await currentDeviceSn();
+    if (generation !== authGeneration) return { ok: false, status: 0, msg: '登录状态已变更，请重试' };
     const r = await fetch(`${API_BASE}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: phone, password, deviceSn: await currentDeviceSn() }),
+      body: JSON.stringify({ username: phone, password, deviceSn }),
     });
     const j = await r.json();
+    if (generation !== authGeneration) return { ok: false, status: 0, msg: '登录状态已变更，请重试' };
     if (j.token) {
       localStorage.setItem('moran_token', j.token);
       notifyAuthChanged();
@@ -88,12 +115,16 @@ export async function cloudPushProgress(
   try {
     const token = localStorage.getItem('moran_token');
     if (!token) return { ok: false, status: 0, unauthorized: true };
+    const generation = authGeneration;
     const response = await fetch(`${API_BASE}/api/sync/push`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ data, baseRevision }),
       signal: AbortSignal.timeout(10000),
     });
+    if (generation !== authGeneration || localStorage.getItem('moran_token') !== token) {
+      return { ok: false, status: 0, unauthorized: true };
+    }
     if (response.status === 401) {
       clearInvalidSession();
       return { ok: false, status: 401, unauthorized: true };
@@ -117,10 +148,12 @@ export async function cloudPullProgress(): Promise<CloudProgressSnapshot | null>
   try {
     const token = localStorage.getItem('moran_token');
     if (!token) return null;
+    const generation = authGeneration;
     const r = await fetch(`${API_BASE}/api/sync/pull`, {
       headers: { Authorization: `Bearer ${token}` },
       signal: AbortSignal.timeout(10000),
     });
+    if (generation !== authGeneration || localStorage.getItem('moran_token') !== token) return null;
     if (r.status === 401) {
       clearInvalidSession();
       return null;

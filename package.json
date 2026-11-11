@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:web": "vite build --config vite.mobile.config.ts --mode web",
+    "build:webpay": "vite build --config vite.mobile.config.ts --mode webpay",
     "build:web:portable": "npm run build:web && node scripts/build-web-portable.mjs",
     "build:mobile": "vite build --config vite.mobile.config.ts",
     "build:mobile:device-auth": "vite build --config vite.mobile.config.ts --mode device-auth",

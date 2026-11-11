@@ -9,3 +9,4 @@ interface ImportMetaEnv {
 declare const __MORAN_API_BASE__: string;
 declare const __MORAN_CONTENT_API_BASE__: string;
 declare const __MORAN_WEB_TEST__: boolean;
+declare const __MORAN_HASH_ROUTER__: boolean;

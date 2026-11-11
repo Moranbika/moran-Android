@@ -21,6 +21,7 @@ import {
   type WallpaperId,
 } from '@/lib/appearance';
 import { store } from '@/lib/store';
+import { cloudLogout } from '@/lib/cloud-sync';
 
 export default function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<ISettings>(() => {
@@ -135,6 +136,7 @@ export default function SettingsProvider({ children }: { children: ReactNode }) 
   }, []);
 
   const logout = useCallback(() => {
+    void cloudLogout();
     setSettings((s) => ({ ...s, loginMethod: null, loggedIn: false, accountId: undefined }));
   }, []);
 

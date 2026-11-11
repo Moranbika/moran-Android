@@ -8,27 +8,36 @@ const PRIVATE_API_BASE = 'https://moranenglish.cn';
 
 export default defineConfig(({ mode }) => {
   const isWeb = mode === 'web';
-  const isStore = mode === 'store' || isWeb;
-  const deviceAuthEnabled = mode === 'device-auth' && !isStore;
+  const isWebpay = mode === 'webpay';
+  const isStore = mode === 'store';
+  // store/web 使用占位组件（不校验设备、不接支付）；webpay 用真实会员页
+  const storeAliasEnabled = isStore || isWeb;
+  const deviceAuthEnabled = mode === 'device-auth' && !storeAliasEnabled;
   const env = loadEnv(mode, process.cwd(), '');
-  const paymentsEnabled = env.VITE_PAYMENTS_ENABLED === 'true'
+  const paymentsEnabled = isWebpay
     ? true
-    : env.VITE_PAYMENTS_ENABLED === 'false'
-      ? false
-      : !isStore;
+    : env.VITE_PAYMENTS_ENABLED === 'true'
+      ? true
+      : env.VITE_PAYMENTS_ENABLED === 'false'
+        ? false
+        : !storeAliasEnabled;
   const configuredApi = String(env.VITE_API_BASE_URL || '').trim().replace(/\/$/, '');
   const configuredContentApi = String(env.VITE_CONTENT_API_BASE_URL || '').trim().replace(/\/$/, '');
-  const apiBase = isWeb
-    ? ''
-    : isStore
-      ? (configuredApi.startsWith('https://') ? configuredApi : '')
-      : configuredApi || PRIVATE_API_BASE;
-  const contentApiBase = isWeb
-    ? ''
-    : isStore
-      ? (configuredContentApi.startsWith('https://') ? configuredContentApi : '')
-      : configuredContentApi || apiBase;
-  const storeOnlyAliases = isStore
+  const apiBase = isWebpay
+    ? (configuredApi.startsWith('https://') ? configuredApi : PRIVATE_API_BASE)
+    : isWeb
+      ? ''
+      : isStore
+        ? (configuredApi.startsWith('https://') ? configuredApi : '')
+        : configuredApi || PRIVATE_API_BASE;
+  const contentApiBase = isWebpay
+    ? (configuredContentApi || apiBase)
+    : isWeb
+      ? ''
+      : isStore
+        ? (configuredContentApi.startsWith('https://') ? configuredContentApi : '')
+        : configuredContentApi || apiBase;
+  const storeOnlyAliases = storeAliasEnabled
     ? [
         {
           find: '@/components/PaymentStatusProvider',
@@ -63,7 +72,8 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.VITE_DEVICE_AUTH_ENABLED': JSON.stringify(deviceAuthEnabled ? 'true' : 'false'),
       __MORAN_API_BASE__: JSON.stringify(apiBase),
       __MORAN_CONTENT_API_BASE__: JSON.stringify(contentApiBase),
-      __MORAN_WEB_TEST__: JSON.stringify(isWeb),
+      __MORAN_WEB_TEST__: JSON.stringify(isWeb && !isWebpay),
+      __MORAN_HASH_ROUTER__: JSON.stringify(isWeb || isWebpay),
     },
     resolve: {
       alias: [
@@ -84,7 +94,7 @@ export default defineConfig(({ mode }) => {
       ],
     },
     build: {
-      outDir: isWeb ? 'dist/web' : 'dist/mobile',
+      outDir: isWebpay ? 'dist/webpay' : isWeb ? 'dist/web' : 'dist/mobile',
       emptyOutDir: true,
     },
   };

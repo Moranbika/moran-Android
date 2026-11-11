@@ -4,7 +4,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Eye,
   Brain,
@@ -35,6 +35,7 @@ import { bookWords } from '@/data/books';
 import type { IVocabWord } from '@/data/words';
 import { buildStudyQueue, summarizeMemory, getForgettingCurve } from '@/lib/memory';
 import { sortByForgetting } from '@/lib/srs/adapter';
+import { filterSelectedWords, readBookSelection } from '@/lib/book-study-selection';
 import type { Rating } from '@/lib/memory';
 
 type Phase = 'overview' | 'study' | 'done';
@@ -87,10 +88,13 @@ function ExampleSentence({ word, text, zh }: { word: string; text?: string; zh?:
 
 export default function VocabPage() {
   const { settings } = useSettings();
-  return <VocabSession key={settings.selectedBookId} />;
+  const [searchParams] = useSearchParams();
+  const selectionMode = searchParams.get('selection') === '1';
+  const bookId = selectionMode ? searchParams.get('book') || settings.selectedBookId : settings.selectedBookId;
+  return <VocabSession key={`${bookId}:${selectionMode ? 'selection' : 'all'}`} bookId={bookId} selectionMode={selectionMode} />;
 }
 
-function VocabSession() {
+function VocabSession({ bookId, selectionMode }: { bookId: string; selectionMode: boolean }) {
   const { t } = useI18n();
   const {
     progress,
@@ -101,13 +105,24 @@ function VocabSession() {
   } = useProgress();
   const { settings } = useSettings();
   const { content } = useContent();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const focusMode = searchParams.get('mode');
-  const currentBook = content.books.find((b) => b.id === settings.selectedBookId) ?? content.books[0];
+  const currentBook = content.books.find((b) => b.id === bookId) ?? content.books[0];
   // 学习的词：内置词书用该书词汇，否则回退到内置核心词库
-  const currentWords = useMemo(
+  const bookWordsForStudy = useMemo(
     () => (currentBook?.builtin && currentBook.units?.length ? bookWords(currentBook) : content.coreWords),
     [content.coreWords, currentBook],
+  );
+  const selectedIds = useMemo(
+    () => selectionMode && currentBook
+      ? readBookSelection(currentBook.id, bookWordsForStudy.map((word) => word.id))
+      : [],
+    [selectionMode, currentBook, bookWordsForStudy],
+  );
+  const currentWords = useMemo(
+    () => selectionMode ? filterSelectedWords(bookWordsForStudy, selectedIds) : bookWordsForStudy,
+    [selectionMode, bookWordsForStudy, selectedIds],
   );
   const [phase, setPhase] = useState<Phase>('overview');
   const [revealed, setRevealed] = useState(false);
@@ -328,6 +343,7 @@ function VocabSession() {
   }, [phase, revealed]);
 
   const totalPlanned = study.dueCount + study.newCount;
+  const emptySelection = selectionMode && selectedIds.length === 0;
   const newWordShortage = focusMode !== 'review' && study.newCount < dailyNewLimit;
   const allDone = phase === 'study' && queue.length === 0;
 
@@ -336,6 +352,17 @@ function VocabSession() {
       {/* ===== 概览：记忆分布 + 今日任务 ===== */}
       {phase === 'overview' && (
         <>
+          {emptySelection && (
+            <Card>
+              <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
+                <p className="font-semibold">{t('尚未选择要学习的单词')}</p>
+                <p className="text-sm text-muted-foreground">{t('请返回词书选择单词后再开始学习。')}</p>
+                <Button variant="outline" onClick={() => navigate(`/book/${encodeURIComponent(bookId)}`)}>
+                  <ChevronLeft className="h-4 w-4" /> {t('返回选词')}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
           {/* 今日任务 */}
           <Card>
             <CardHeader className="pb-2">

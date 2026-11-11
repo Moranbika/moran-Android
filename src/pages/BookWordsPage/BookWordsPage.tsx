@@ -10,8 +10,8 @@ import { useContent } from '@/context/content-context';
 import { useI18n } from '@/context/i18n-context';
 import { bookWords } from '@/data/books';
 import type { IVocabWord } from '@/data/words';
+import { BOOK_SELECTION_STORAGE_KEY, readBookSelection } from '@/lib/book-study-selection';
 
-const LS_KEY = 'book-selected-words';
 const LS_SORT_KEY = 'book-words-sort';
 
 type SortMode = 'byUnit' | 'alpha' | 'shuffle';
@@ -26,6 +26,11 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export default function BookWordsPage() {
+  const { id } = useParams();
+  return <BookWordsSession key={id} />;
+}
+
+function BookWordsSession() {
   const { t } = useI18n();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -47,17 +52,16 @@ export default function BookWordsPage() {
   }, [sort]);
 
   const [selected, setSelected] = useState<string[]>(() => {
-    try {
-      const raw = localStorage.getItem(`${LS_KEY}-${book?.id}`);
-      return raw ? (JSON.parse(raw) as string[]) : [];
-    } catch {
-      return [];
-    }
+    return book ? readBookSelection(book.id, words.map((word) => word.id)) : [];
   });
-
   useEffect(() => {
-    if (book) localStorage.setItem(`${LS_KEY}-${book.id}`, JSON.stringify(selected));
-  }, [selected, book]);
+    if (book) setSelected(readBookSelection(book.id, words.map((word) => word.id)));
+  }, [book?.id, words]);
+
+  const updateSelected = (next: string[]) => {
+    setSelected(next);
+    if (book) localStorage.setItem(`${BOOK_SELECTION_STORAGE_KEY}-${book.id}`, JSON.stringify(next));
+  };
 
   // 按排序模式计算要渲染的"单元分组"列表
   const grouped: { id: string; title: string; words: IVocabWord[] }[] = useMemo(() => {
@@ -98,11 +102,11 @@ export default function BookWordsPage() {
   }
 
   const toggle = (wid: string) =>
-    setSelected((s) => (s.includes(wid) ? s.filter((x) => x !== wid) : [...s, wid]));
-  const selectAll = () => setSelected(words.map((w) => w.id));
+    updateSelected(selected.includes(wid) ? selected.filter((x) => x !== wid) : [...selected, wid]);
+  const selectAll = () => updateSelected(words.map((w) => w.id));
   const selectRandom = () => {
     const n = Math.max(1, Math.floor(words.length / 2));
-    setSelected(shuffle(words.map((w) => w.id)).slice(0, n));
+    updateSelected(shuffle(words.map((w) => w.id)).slice(0, n));
   };
 
   const pct = words.length ? Math.round((selected.length / words.length) * 10000) / 100 : 0;
@@ -200,7 +204,12 @@ export default function BookWordsPage() {
               {t('今日待选 {n}/{total}', { n: selected.length, total: words.length })}
             </span>
             <button
-              onClick={() => navigate('/vocab')}
+              onClick={() => {
+                if (book) {
+                  localStorage.setItem(`${BOOK_SELECTION_STORAGE_KEY}-${book.id}`, JSON.stringify(selected));
+                  navigate(`/vocab?selection=1&book=${encodeURIComponent(book.id)}`);
+                }
+              }}
               className="flex min-h-11 flex-1 items-center justify-center rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90 active:bg-primary/80 sm:size-12 sm:flex-none sm:px-0"
             >
               {t('去学习')}

@@ -23,8 +23,15 @@ import {
   createPaymentOrder,
   fetchPlans,
   paymentApiEnabled,
+  redeemIapPurchase,
   type PaymentPlan,
 } from '@/lib/payment-api';
+import {
+  finishIapPurchase,
+  iapSupported,
+  purchaseIapProduct,
+  type IapProductType,
+} from '@/lib/native-permissions';
 import { getSafePaymentQr } from '@/lib/payment-qr';
 import { cn } from '@/lib/utils';
 
@@ -103,9 +110,49 @@ export default function MembershipPage() {
     navigate('/login', { state: { from: '/membership' } });
   };
 
+  const buyWithIap = async (plan: PaymentPlan) => {
+    setBuying(plan.id);
+    try {
+      const productType: IapProductType = plan.type === 'times' ? 'consumable' : 'nonrenewable';
+      const productId = `moran_plan_${plan.id}`;
+      const outcome = await purchaseIapProduct(
+        productId,
+        productType,
+        JSON.stringify({ planId: plan.id }),
+      );
+      if (!outcome.ok) {
+        toast.error(t(outcome.message || '支付未完成'));
+        return;
+      }
+      const purchaseToken = String(outcome.order?.purchaseToken || '');
+      const purchaseOrderId = String(outcome.order?.purchaseOrderId || '');
+      if (!purchaseToken || !purchaseOrderId) {
+        throw new Error('支付结果缺少订单凭证');
+      }
+      await redeemIapPurchase({
+        planId: plan.id,
+        productId,
+        productType,
+        purchaseToken,
+        purchaseOrderId,
+        purchaseData: outcome.purchaseData || '',
+      });
+      await finishIapPurchase(productType, purchaseToken, purchaseOrderId);
+      toast.success(t('支付成功，套餐已开通'));
+    } catch (error) {
+      toast.error(t(error instanceof Error ? error.message : '支付失败'));
+    } finally {
+      setBuying(null);
+    }
+  };
+
   const buy = async (plan: PaymentPlan) => {
     if (!hasCloudToken) {
       toast.message(t('购买前请先登录云端账号'));
+      return;
+    }
+    if (iapSupported()) {
+      await buyWithIap(plan);
       return;
     }
     setBuying(plan.id);
